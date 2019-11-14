@@ -17,7 +17,8 @@ FLAGS		= -Wall -Wextra -Werror -g
 DIR_O		=	objects
 
 # files
-SRC			=	main.c			free_exit.c
+SRC			=	main.c			free_exit.c				reader.c			\
+				parse_flags.c	extract.c
 
 OBJ			=	$(addprefix $(DIR_O)/,$(SRC:.c=.o))
 

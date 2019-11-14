@@ -16,8 +16,11 @@ void	error_exit(t_vm *s, char *message)
 {
 	if (s)
 	{
-		if (s->fd)
-			free(s->fd);
+		if (s->player)
+		{
+			/// free name comment!!!
+			free(s->player);
+		}
 		free(s);
 	}
 	if (message)
@@ -29,8 +32,11 @@ void	free_exit(t_vm *s, char *message)
 {
 	if (s)
 	{
-		if (s->fd)
-			free(s->fd);
+		if (s->player)
+		{
+			/// free name comment!!!
+			free(s->player);
+		}
 		free(s);
 	}
 	if (message)
