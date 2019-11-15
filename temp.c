@@ -62,14 +62,15 @@ void	print_all(t_vm *s)
 	fprint("max_pl (number of players)\t%d\n", (int)s->max_pl);
 	fprint("flags_exists\t\t\t%d\n", (int)s->flags_exists);
 	fprint("grafix flag\t\t\t%s\n", (s->flag & FLAG_GRAF) ? "ON" : "OFF");
-	fprint("flag 1\t\t\t\t%s\n", (s->flag & FLAG_1) ? "ON" : "OFF");
-	fprint("flag 2\t\t\t\t%s\n", (s->flag & FLAG_2) ? "ON" : "OFF");
+	fprint("dump flag\t\t\t%s\n", (s->flag & FLAG_DUMP) ? "ON" : "OFF");
+	fprint("nbr flag\t\t\t%s\n", (s->flag & FLAG_NBR) ? "ON" : "OFF");
 	i = -1;
 	while (s->player && ++i < s->max_pl)
 	{
 		fprint("-- player %d: --\n", (int)(i + 1));
 		fprint("filename\t'%s'\n", s->player[i].filename);
 		fprint("fd\t\t%d\n", s->player[i].fd);
+		fprint("id\t\t%d\n", (int)s->player[i].id);
 		fprint("name:\t\t'%s'\n", s->player[i].name);
 		fprint("comment:\t'%s'\n", s->player[i].comment);
 		fprint("codesize:\t%d\n", s->player[i].codesize);

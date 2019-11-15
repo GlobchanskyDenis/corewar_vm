@@ -37,6 +37,8 @@ void	error_exit(t_vm *s, char *message)
 	{
 		if (s->player)
 			player_free(s->player, s->max_pl);
+		if (s->tab)
+			free(s->tab);
 		free(s);
 	}
 	if (message)
@@ -50,6 +52,8 @@ void	free_exit(t_vm *s, char *message)
 	{
 		if (s->player)
 			player_free(s->player, s->max_pl);
+		if (s->tab)
+			free(s->tab);
 		free(s);
 	}
 	if (message)

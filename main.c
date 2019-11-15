@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "vm.h"
-
+/*
 static void	check_name(t_vm *s, char *name)
 {
 	int		len;
@@ -28,40 +28,39 @@ static void	check_name(t_vm *s, char *name)
 		free_exit(s, NULL);
 	}
 }
-
-static void	carefully_open(t_pl *player, char *filename, t_vm *s)
+*/
+static void	sort_players_by_id(t_pl *player, short max_pl, t_vm *s)
 {
-	if (!player || !filename || !s)
-		free_exit(s, "carefully open - empty ptr found");
-	player->filename = filename;
-	if ((player->fd = open(filename, O_RDONLY)) < 3)
+	short	i;
+	t_pl	tmp_player;
+
+	if (!s || !player)
+		error_exit(s, "sort players by id - empty ptr found");
+	i = -1;
+	while(++i < max_pl - 1)
 	{
-		fprint("Warning: cannot open file '%s'\n", filename);
-		free_exit(s, NULL);
+		if (player[i].id > player[i + 1].id)
+		{
+			tmp_player = player[i + 1];
+			player[i + 1] = player[i];
+			player[i] = tmp_player;
+			i = -1;
+		}
 	}
-	if (read(player->fd, NULL, 0) < 0)
-	{
-		fprint("Warning: cannot take access to '%s'\n", filename);
-		free_exit(s, NULL);
-	}
-	check_name(s, filename);
 }
 
-static t_vm	*create_vm_struct(int ac, char **av)
+static t_vm	*create_vm_struct(short *tab)
 {
 	t_vm	*s;
-	short	i;
 
-	if (!av)
+	if (!tab)
 		error_exit(NULL, "create_vm_struct - empty ptr found");
 	if (!(s = (t_vm *)ft_memalloc(sizeof(t_vm))))
 		error_exit(NULL, "create_vm_struct - malloc returned null");
-	if (!(s->player = (t_pl *)ft_memalloc(sizeof(t_pl) * (ac - 1))))
+	if (!(s->player = (t_pl *)ft_memalloc(sizeof(t_pl) * tab[0])))
 		error_exit(s, "create_vm_struct - malloc (arr) returned null");
-	parse_flags(ac, av, s);
-	i = -1;
-	while (++i < (short)ac - 1 - s->flags_exists)
-		carefully_open(&(s->player[i]), av[i + 1 + s->flags_exists], s);
+	s->tab = tab;
+	s->max_pl = tab[0];
 	return (s);
 }
 
@@ -69,11 +68,16 @@ int			main(int ac, char **av)
 {
 	t_vm	*s;
 
-	if (ac < 2 || (ac < 3 && av[1][0] == '-') || ac > MAX_PLAYERS + 2 || \
-			(ac > MAX_PLAYERS + 1 && av[1][0] != '-'))
-		free_exit(NULL, "Wrong number of players - ./corewar <pl1> ...");
-	if (!(s = create_vm_struct(ac, av)))
+	if (ac < 2 || (ac < 3 && av[1][0] == '-') || ac > MAX_ARGS_NUMBER + 10) // + 1
+	{
+		fprint("Wrong number of parameters. ");
+		fprint("Flags: [-grafix] [-dump nbr_cycles]\n");
+		free_exit(NULL, "Use: ./corewar [-flags] [[-n number]champion] ...");
+	}
+	if (!(s = create_vm_struct(preliminary_parse_flags(ac, av))))
 		error_exit(s, "main - null ptr returned");
+	parse_flags(ac, av, s);
+	sort_players_by_id(s->player, s->max_pl, s);
 	read_files(s);
 	print_all(s);
 	free_exit(s, "its ok!");
