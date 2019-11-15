@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_flags_2.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bsabre-c <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/11/15 18:49:20 by bsabre-c          #+#    #+#             */
+/*   Updated: 2019/11/15 18:49:37 by bsabre-c         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "vm.h"
 
 static void	carefully_open(t_pl *player, char **av, short i, t_vm *s)
@@ -38,28 +50,6 @@ static void	check_other_flags(char **av, short i, t_vm *s)
 	}
 }
 
-static void	check_invalid_flag_cases(int ac, char **av, t_vm *s)
-{
-	short	i;
-
-	if (!av || !s)
-		error_exit(s, "check invalid flag cases - empty ptr found");
-	i = 0;
-	while (++i < (short)ac)
-	{
-		if (s->tab[i] == FLAG_DUMP && i + 1 < ac && s->tab[i + 1] != FLAG_ARG)
-			free_exit(s, "Warning: dump flag without argument");
-		if (s->tab[i] == FLAG_NBR && i + 1 < ac && s->tab[i + 1] != FLAG_ARG)
-			free_exit(s, "Warning: number flag without argument");
-		if (s->tab[i] == FLAG_ARG && s->tab[i - 1] != FLAG_DUMP && \
-				s->tab[i - 1] != FLAG_NBR)
-			free_exit(s, "Warning: argument without flag");
-		if (s->tab[i] == FLAG_ARG && s->tab[i - 1] == FLAG_NBR && \
-				(i + 1 == ac && s->tab[i + 1] != FLAG_FILE))
-			free_exit(s, "Warning: flag nbr and argument without file");
-	}
-}
-
 static void	assign_id_to_files(t_pl *player, short max_pl, t_vm *s)
 {
 	short	i;
@@ -86,12 +76,41 @@ static void	assign_id_to_files(t_pl *player, short max_pl, t_vm *s)
 	}
 }
 
+static void	check_invalid_flag_cases(int ac, t_vm *s)
+{
+	short	i;
+
+	if (!s)
+		error_exit(s, "check invalid flag cases - empty ptr found");
+	i = 0;
+	while (++i < (short)ac)
+	{
+		if (s->tab[i] == FLAG_DUMP && i + 1 < ac && s->tab[i + 1] != FLAG_ARG)
+			free_exit(s, "Warning: dump flag without argument");
+		if (s->tab[i] == FLAG_NBR && i + 1 < ac && s->tab[i + 1] != FLAG_ARG)
+			free_exit(s, "Warning: number flag without argument");
+		if (s->tab[i] == FLAG_ARG && s->tab[i - 1] != FLAG_DUMP && \
+				s->tab[i - 1] != FLAG_NBR)
+			free_exit(s, "Warning: argument without flag");
+		if (s->tab[i] == FLAG_ARG && s->tab[i - 1] == FLAG_NBR && \
+				(i + 1 >= ac || s->tab[i + 1] != FLAG_FILE))
+			free_exit(s, "Warning: flag nbr and argument without file");
+		if (s->tab[i] == FLAG_DUMP && (i > 2 || \
+				(i > 1 && s->tab[1] != FLAG_GRAF)))
+			free_exit(s, "Warning: dump must be in the begining");
+		if (s->tab[i] == FLAG_GRAF && (i > 3 || \
+				(i > 1 && s->tab[1] != FLAG_DUMP)))
+			free_exit(s, "Warning: graf must be in the begining");
+	}
+	assign_id_to_files(s->player, s->max_pl, s);
+}
+
 void		parse_flags(int ac, char **av, t_vm *s)
 {
 	short	i;
 	short	j;
 
-	if (!s || !s->tab|| !av)
+	if (!s || !s->tab || !av)
 		error_exit(s, "fill vm struct - empty ptr found");
 	j = 0;
 	i = 0;
@@ -102,8 +121,9 @@ void		parse_flags(int ac, char **av, t_vm *s)
 			carefully_open(&(s->player[j]), av, i, s);
 			if (i > 1 && s->tab[i - 2] == FLAG_NBR && s->tab[i - 1] == FLAG_ARG)
 			{
-				s->player[j].id = ft_atoi(av[i - 1]);
-				if (s->player[j].id < 1)
+				if (ft_atoi(av[i - 1]) > 30000)
+					free_exit(s, "Warning: id is too big");
+				if ((s->player[j].id = ft_atoi(av[i - 1])) < 1)
 					free_exit(s, "Warning: id must be bigger than 0");
 				s->flag = s->flag | FLAG_NBR;
 			}
@@ -111,6 +131,5 @@ void		parse_flags(int ac, char **av, t_vm *s)
 		}
 		check_other_flags(av, i, s);
 	}
-	check_invalid_flag_cases(ac, av, s);
-	assign_id_to_files(s->player, s->max_pl, s);
+	check_invalid_flag_cases(ac, s);
 }

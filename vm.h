@@ -42,7 +42,6 @@ typedef struct	s_vm
 	t_pl	*player;
 	short	*tab;
 	short	max_pl;
-	short	flags_exists;
 	short	flag;
 	int		dump;
 }				t_vm;

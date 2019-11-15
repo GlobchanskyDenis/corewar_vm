@@ -62,7 +62,8 @@ static void	check_header_errors(int ret, t_pl *player, char *buf, t_vm *s)
 	if (buf[0] != 0 || buf[1] != (char)0xEA || \
 			buf[2] != (char)0x83 || buf[3] != (char)0xF3)
 	{
-		fprint("check header errors - file '%s' isn't binary!", player->filename);
+		fprint("check header errors - file '%s' isn't binary!", \
+				player->filename);
 		error_exit(s, NULL);
 	}
 	null0 = buf + 4 + PROG_NAME_LENGTH;

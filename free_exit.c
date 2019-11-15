@@ -31,7 +31,7 @@ static void	player_free(t_pl *player, short max_pl)
 	free(player);
 }
 
-void	error_exit(t_vm *s, char *message)
+void		error_exit(t_vm *s, char *message)
 {
 	if (s)
 	{
@@ -46,7 +46,7 @@ void	error_exit(t_vm *s, char *message)
 	exit(1);
 }
 
-void	free_exit(t_vm *s, char *message)
+void		free_exit(t_vm *s, char *message)
 {
 	if (s)
 	{

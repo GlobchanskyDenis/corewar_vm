@@ -32,7 +32,7 @@ static char	*allocate_this(char *buf, short name_len, t_vm *s)
 	return (dst);
 }
 
-void	extract_data(t_pl *player, char *buf, t_vm *s)
+void		extract_data(t_pl *player, char *buf, t_vm *s)
 {
 	if (!player || !s || !buf)
 		error_exit(s, "extract data - empty ptr found");

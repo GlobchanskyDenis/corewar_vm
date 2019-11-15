@@ -12,24 +12,24 @@
 
 #include "vm.h"
 
-static void print_hex(int nbr)
+static void	print_hex(int nbr)
 {
-    if (nbr < 10)
-        ft_putnbr(nbr);
-    else if (nbr == 10)
-        ft_putchar('A');
-    else if (nbr == 11)
-        ft_putchar('B');
-    else if (nbr == 12)
-        ft_putchar('C');
-    else if (nbr == 13)
-        ft_putchar('D');
-    else if (nbr == 14)
-        ft_putchar('E');
-    else if (nbr == 15)
-        ft_putchar('F');
-    else
-        ft_putstr("|invalid_nbr|");
+	if (nbr < 10)
+		ft_putnbr(nbr);
+	else if (nbr == 10)
+		ft_putchar('A');
+	else if (nbr == 11)
+		ft_putchar('B');
+	else if (nbr == 12)
+		ft_putchar('C');
+	else if (nbr == 13)
+		ft_putchar('D');
+	else if (nbr == 14)
+		ft_putchar('E');
+	else if (nbr == 15)
+		ft_putchar('F');
+	else
+		ft_putstr("|invalid_nbr|");
 }
 
 static void	print_code(char *code, short size, t_vm *s)
@@ -44,15 +44,15 @@ static void	print_code(char *code, short size, t_vm *s)
 	while (++i < size)
 	{
 		hex = (int)((unsigned char)code[i] >> 4);
-        print_hex(hex);
-        hex = (int)((unsigned char)code[i]) & 0xF;
-        print_hex(hex);
-        ft_putchar(' ');
+		print_hex(hex);
+		hex = (int)((unsigned char)code[i]) & 0xF;
+		print_hex(hex);
+		ft_putchar(' ');
 	}
 	ft_putchar('\n');
 }
 
-void	print_all(t_vm *s)
+void		print_all(t_vm *s)
 {
 	short	i;
 
@@ -60,7 +60,6 @@ void	print_all(t_vm *s)
 		error_exit(s, "print all - empty ptr found");
 	fprint("=======================================\n\t\tPRINT ALL\n");
 	fprint("max_pl (number of players)\t%d\n", (int)s->max_pl);
-	fprint("flags_exists\t\t\t%d\n", (int)s->flags_exists);
 	fprint("grafix flag\t\t\t%s\n", (s->flag & FLAG_GRAF) ? "ON" : "OFF");
 	fprint("dump flag\t\t\t%s\n", (s->flag & FLAG_DUMP) ? "ON" : "OFF");
 	fprint("nbr flag\t\t\t%s\n", (s->flag & FLAG_NBR) ? "ON" : "OFF");
