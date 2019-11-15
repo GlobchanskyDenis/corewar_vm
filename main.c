@@ -75,6 +75,7 @@ int			main(int ac, char **av)
 	if (!(s = create_vm_struct(ac, av)))
 		error_exit(s, "main - null ptr returned");
 	read_files(s);
+	print_all(s);
 	free_exit(s, "its ok!");
 	return (0);
 }

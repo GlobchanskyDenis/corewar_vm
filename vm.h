@@ -30,6 +30,7 @@ typedef struct	s_pl
 	char	*filename;
 	char	*name;
 	char	*comment;
+	char	*code;
 	short	codesize;
 }				t_pl;
 
@@ -49,6 +50,8 @@ void			parse_flags(int ac, char **av, t_vm *s);// parse_flags.c
 void			extract_data(t_pl *player, char *buf, t_vm *s);	// extract.c
 
 void			read_files(t_vm *s);	// reader.c
+
+void			print_all(t_vm *s);		// temp.c
 
 
 

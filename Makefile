@@ -18,7 +18,7 @@ DIR_O		=	objects
 
 # files
 SRC			=	main.c			free_exit.c				reader.c			\
-				parse_flags.c	extract.c
+				parse_flags.c	extract.c				temp.c
 
 OBJ			=	$(addprefix $(DIR_O)/,$(SRC:.c=.o))
 
