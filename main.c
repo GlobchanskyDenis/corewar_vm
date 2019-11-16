@@ -59,7 +59,7 @@ int			main(int ac, char **av)
 {
 	t_vm	*s;
 
-	if (ac < 2 || (ac < 3 && av[1][0] == '-') || ac > MAX_ARGS_NUMBER + 10)//+1
+	if (ac < 2 || (ac < 3 && av[1][0] == '-') || ac > MAX_ARGS_NUMBER + 1)
 	{
 		fprint("Wrong number of parameters. ");
 		fprint("Flags: [-grafix] [-dump nbr_cycles]\n");

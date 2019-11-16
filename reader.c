@@ -16,13 +16,11 @@ static void	check_size_errors(int ret, char *filename, t_vm *s)
 {
 	if (!s || !filename)
 		error_exit(s, "check size errors - empty ptr found");
-	// 2192
 	if (ret < 12 + PROG_NAME_LENGTH + CHAMP_EXEC_CODE_SIZE + COMMENT_LENGTH)
 	{
 		fprint("Error: file '%s' has too small size\n", filename);
 		error_exit(s, NULL);
 	}
-	// 2874
 	if (ret > 12 + PROG_NAME_LENGTH + CHAMP_EXEC_CODE_SIZE + COMMENT_LENGTH +\
 			CHAMP_MAX_SIZE)
 	{

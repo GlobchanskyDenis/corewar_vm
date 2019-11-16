@@ -46,18 +46,12 @@ typedef struct	s_vm
 	int		dump;
 }				t_vm;
 
-void			error_exit(t_vm *s, char *message);		// free_exit.c
-void			free_exit(t_vm *s, char *message);		// free_exit.c
-
-short			*preliminary_parse_flags(int ac, char **av);// parse_flags_1.c
-void			parse_flags(int ac, char **av, t_vm *s);	// parse_flags_2.c
-
-void			extract_data(t_pl *player, char *buf, t_vm *s);	// extract.c
-
-void			read_files(t_vm *s);	// reader.c
-
-void			print_all(t_vm *s);		// temp.c
-
-
+void			error_exit(t_vm *s, char *message);
+void			free_exit(t_vm *s, char *message);
+short			*preliminary_parse_flags(int ac, char **av);
+void			parse_flags(int ac, char **av, t_vm *s);
+void			extract_data(t_pl *player, char *buf, t_vm *s);
+void			read_files(t_vm *s);
+void			print_all(t_vm *s);
 
 #endif

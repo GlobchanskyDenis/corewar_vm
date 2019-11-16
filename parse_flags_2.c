@@ -50,7 +50,7 @@ static void	check_other_flags(char **av, short i, t_vm *s)
 	}
 }
 
-static void	assign_id_to_files(t_pl *player, short max_pl, t_vm *s)
+static void	assign_id_to_players(t_pl *player, short max_pl, t_vm *s)
 {
 	short	i;
 	short	j;
@@ -102,7 +102,7 @@ static void	check_invalid_flag_cases(int ac, t_vm *s)
 				(i > 1 && s->tab[1] != FLAG_DUMP)))
 			free_exit(s, "Warning: graf must be in the begining");
 	}
-	assign_id_to_files(s->player, s->max_pl, s);
+	assign_id_to_players(s->player, s->max_pl, s);
 }
 
 void		parse_flags(int ac, char **av, t_vm *s)
