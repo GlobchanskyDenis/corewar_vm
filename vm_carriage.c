@@ -89,7 +89,7 @@ void		delete_shown_carriage(t_car *carriage, t_vm *vm)
 		error_exit(vm, "delete shown carriage - empty ptr found");
 	tmp = vm->car;
 	prev = NULL;
-	while (tmp != carriage)
+	while (tmp && tmp != carriage)
 	{
 		prev = tmp;
 		tmp = tmp->next;

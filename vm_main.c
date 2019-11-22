@@ -22,7 +22,8 @@ static t_vm	*create_vm_struct(short *tab)
 		error_exit(NULL, "create_vm_struct - malloc (vm) returned null");
 	if (!(vm->player = (t_pl *)ft_memalloc(sizeof(t_pl) * tab[0])))
 		error_exit(vm, "create_vm_struct - malloc (player arr) returned null");
-	if (!(vm->arena = (char *)ft_memalloc(sizeof(char) * MEM_SIZE)))
+	if (!(vm->arena = (unsigned char *)ft_memalloc(sizeof(unsigned char) * \
+			MEM_SIZE)))
 		error_exit(vm, "create_vm_struct - malloc (arena) returned null");
 	if (!(vm->command_tab = (t_command *)ft_memalloc(sizeof(t_command) * \
 			COMMAND_AMOUNT)))

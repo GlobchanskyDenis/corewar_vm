@@ -40,7 +40,8 @@ FILES 	=	ft_atoi.c		ft_atoll.c		ft_countwords.c	\
 			ft_mini.c				ft_maxi.c				ft_minf.c		\
 			ft_maxf.c				ft_mind.c				ft_maxd.c		\
 			ft_minll.c				ft_maxll.c				ft_absi.c		\
-			ft_absf.c				ft_absd.c				ft_absll.c
+			ft_absf.c				ft_absd.c				ft_absll.c		\
+			ft_isall_digit.c		ft_isall_hexdigit.c
 
 OBJECTS =	$(addprefix $(DIR_O)/,$(FILES:.c=.o))
 

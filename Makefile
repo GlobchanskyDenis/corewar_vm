@@ -17,9 +17,11 @@ FLAGS		= -Wall -Wextra -Werror -g
 DIR_O		=	objects
 
 # files
-SRC			=	main.c				free_exit.c				reader.c		\
-				parse_flags_1.c		parse_flags_2.c			extract.c		\
-				temp.c
+SRC			=	vm_main.c						vm_free_exit.c				\
+				vm_reader.c						vm_parse_flags_1.c			\
+				vm_parse_flags_2.c				vm_extract.c				\
+				vm_temp.c						vm_carriage.c				\
+				vm_initialize_all.c				vm_initialize_game.c
 
 OBJ			=	$(addprefix $(DIR_O)/,$(SRC:.c=.o))
 

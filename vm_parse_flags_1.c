@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_flags.c                                      :+:      :+:    :+:   */
+/*   vm_parse_flags.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bsabre-c <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -34,32 +34,6 @@ static short	count_files(short ac, short *tab)
 		exit(0);
 	}
 	return (count);
-}
-
-static short	is_all_digits(char *src, short *tab)
-{
-	char	*tmp;
-	int		nbr;
-
-	if (!src || !tab)
-	{
-		if (tab)
-			free(tab);
-		error_exit(NULL, "is all digits - empty ptr found");
-	}
-	nbr = ft_atoi(src);
-	if (!(tmp = ft_itoa(nbr)))
-	{
-		free(tab);
-		error_exit(NULL, "is all digits - malloc returned null");
-	}
-	if (ft_strcmp(src, tmp))
-	{
-		free(tmp);
-		return (0);
-	}
-	free(tmp);
-	return (1);
 }
 
 static short	is_file(char *src, short *tab)
@@ -95,7 +69,7 @@ static short	parse_argument(char *src, short *tab)
 		return (FLAG_DUMP);
 	if (!ft_strcmp(src, NBR))
 		return (FLAG_NBR);
-	if (is_all_digits(src, tab))
+	if (ft_isall_digit(src))
 		return (FLAG_ARG);
 	if (is_file(src, tab))
 		return (FLAG_FILE);
@@ -103,6 +77,12 @@ static short	parse_argument(char *src, short *tab)
 	free(tab);
 	exit(0);
 }
+
+/*
+**	dst is array of flags, that fits in size with array of arguments **av
+**	and explains, what data is each argument consists of.
+**	In dst[0] stores amount of players
+*/
 
 short			*preliminary_parse_flags(int ac, char **av)
 {
