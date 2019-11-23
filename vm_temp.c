@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm_temp.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bsabre-c <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 00:16:51 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/15 00:16:53 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/23 17:13:30 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void	print_hex(int nbr)
 		ft_putstr("|invalid_nbr|");
 }
 
-static void	print_code(char *code, short size, t_vm *vm)
+static void	print_code(void *code, short size, t_vm *vm)
 {
 	short	i;
 	int		hex;
@@ -42,9 +42,9 @@ static void	print_code(char *code, short size, t_vm *vm)
 	i = -1;
 	while (++i < size)
 	{
-		hex = (int)((unsigned char)code[i] >> 4);
+		hex = (int)(((unsigned char *)code)[i] >> 4);
 		print_hex(hex);
-		hex = (int)((unsigned char)code[i]) & 0xF;
+		hex = (int)(((unsigned char *)code)[i]) & 0xF;
 		print_hex(hex);
 		ft_putchar(' ');
 	}
