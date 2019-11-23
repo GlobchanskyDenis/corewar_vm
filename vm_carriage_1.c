@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vm_carriage.c                                      :+:      :+:    :+:   */
+/*   vm_carriage_1.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -62,7 +62,7 @@ void		carriage_read_command(t_car *carriage, t_vm *vm)
 	carriage->cycles_to_exe = command.cycles_to_exe;
 	if (command.carry)
 		carriage->carry = command.carry;
-	carriage->step = command.step;
+	//carriage->step = command.step;
 }
 
 /*
@@ -79,36 +79,4 @@ void		carriage_make_step(t_car *carriage, t_vm *vm)
 	while (vm->arena[carriage->position] > COMMAND_AMOUNT)
 		carriage->position = (carriage->position + 1) % MEM_SIZE;
 	carriage->step = 0;
-}
-
-void		delete_shown_carriage(t_car *carriage, t_vm *vm)
-{
-	t_car		*tmp;
-	t_car		*prev;
-
-	if (!vm || !carriage)
-		error_exit(vm, "delete shown carriage - empty ptr found");
-	tmp = vm->car;
-	prev = NULL;
-	while (tmp && tmp != carriage)
-	{
-		prev = tmp;
-		tmp = tmp->next;
-	}
-	if (tmp == NULL)
-		error_exit(vm, "delete shown carriage - can't find carriage");
-	if (prev)
-	{
-		prev->next = tmp->next;
-		if (tmp->reg)
-			free(tmp->reg);
-		free(tmp);
-	}
-	else
-	{
-		vm->car = vm->car->next;
-		if (tmp->reg)
-			free(tmp->reg);
-		free(tmp);
-	}
 }

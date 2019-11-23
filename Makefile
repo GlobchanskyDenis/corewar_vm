@@ -20,8 +20,9 @@ DIR_O		=	objects
 SRC			=	vm_main.c						vm_free_exit.c				\
 				vm_reader.c						vm_parse_flags_1.c			\
 				vm_parse_flags_2.c				vm_extract.c				\
-				vm_temp.c						vm_carriage.c				\
-				vm_initialize_all.c				vm_initialize_game.c
+				vm_carriage_1.c					vm_carriage_2.c				\
+				vm_initialize_all.c				vm_initialize_game.c		\
+				vm_temp.c
 
 OBJ			=	$(addprefix $(DIR_O)/,$(SRC:.c=.o))
 

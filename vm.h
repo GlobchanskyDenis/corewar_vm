@@ -56,7 +56,6 @@ typedef struct	s_car
 typedef struct	s_command
 {
 	short			carry;
-	short			step;
 	short			cycles_to_exe;
 }				t_command;
 
@@ -89,6 +88,6 @@ t_car			*add_new_carriage_in_stack(t_vm *vm);
 t_car			*carriage_duplicate(t_car *carriage, t_vm *vm);
 void			carriage_read_command(t_car *carriage, t_vm *vm);
 void			carriage_make_step(t_car *carriage, t_vm *vm);
-void			delete_shown_carriage(t_car *carriage, t_vm *vm);
+void			find_n_del_carriage(t_car *carriage, t_vm *vm);
 
 #endif
