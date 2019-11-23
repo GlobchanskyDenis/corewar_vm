@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bsabre-c <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:18:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/13 12:21:44 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/23 16:24:44 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,6 @@ t_car			*carriage_duplicate(t_car *carriage, t_vm *vm);
 void			carriage_read_command(t_car *carriage, t_vm *vm);
 void			carriage_make_step(t_car *carriage, t_vm *vm);
 void			find_n_del_carriage(t_car *carriage, t_vm *vm);
+void			init_command(t_vm *vm);
 
 #endif

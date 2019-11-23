@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm_initialize_all.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bsabre-c <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 18:25:44 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/22 18:25:45 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/23 16:25:03 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,6 @@ void		initialize_all(int ac, char **av, t_vm *vm)
 	check_invalid_flag_cases(ac, vm);
 	sort_players_by_id(vm->player, vm->max_pl, vm);
 	read_files(vm);
+	init_command(vm);
 	initialize_game(vm->arena, vm);
 }
