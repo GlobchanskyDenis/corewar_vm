@@ -1,25 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   live.c                                             :+:      :+:    :+:   */
+/*   fork.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/23 16:19:40 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/23 19:18:29 by jmaynard         ###   ########.fr       */
+/*   Created: 2019/11/23 18:35:13 by jmaynard          #+#    #+#             */
+/*   Updated: 2019/11/23 20:07:51 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
 
-void	op_live(t_car *carriage, t_vm *vm)
+void	op_fork(t_car *carriage, t_vm *vm)
 {
-	int player;
+	t_car	*tmp;
+	int		pos;
 
-	carriage->last_live_cycle = vm->cycle;
-	vm->lives_for_cycle++;
-	get_bytes(&player, vm->arena, carriage->position + 1, 4);
-	if (player == carriage->reg[1])
-		vm->player[player].last_live_cycle = vm->cycle;
-	carriage->step = DIR_SIZE;
+	tmp = carriage_duplicate(carriage, vm);
+	get_bytes(&pos, vm->arena, carriage->position + 1, 2);
+	tmp->position = (pos % IDX_MOD) % MEM_SIZE;
+	carriage->step = 2;
 }
