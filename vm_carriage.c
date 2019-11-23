@@ -37,7 +37,7 @@ t_car		*carriage_duplicate(t_car *carriage, t_vm *vm)
 	if (!(dst = (t_car *)ft_memalloc(sizeof(t_car))))
 		error_exit(vm, "carriage duplicate - malloc returned null");
 	ft_memcpy(dst, carriage, sizeof(t_car));
-	if (!(carriage->reg = (unsigned int *)ft_memalloc(sizeof(unsigned int) * \
+	if (!(dst->reg = (unsigned int *)ft_memalloc(sizeof(unsigned int) * \
 			REG_NUMBER)))
 		error_exit(vm, "carriage duplicate - malloc returned null");
 	ft_memcpy(dst->reg, carriage->reg, sizeof(unsigned int) * REG_NUMBER);
@@ -78,6 +78,7 @@ void		carriage_make_step(t_car *carriage, t_vm *vm)
 	carriage->position = (carriage->position + carriage->step) % MEM_SIZE;
 	while (vm->arena[carriage->position] > COMMAND_AMOUNT)
 		carriage->position = (carriage->position + 1) % MEM_SIZE;
+	carriage->step = 0;
 }
 
 void		delete_shown_carriage(t_car *carriage, t_vm *vm)
@@ -99,11 +100,15 @@ void		delete_shown_carriage(t_car *carriage, t_vm *vm)
 	if (prev)
 	{
 		prev->next = tmp->next;
+		if (tmp->reg)
+			free(tmp->reg);
 		free(tmp);
 	}
 	else
 	{
 		vm->car = vm->car->next;
+		if (tmp->reg)
+			free(tmp->reg);
 		free(tmp);
 	}
 }
