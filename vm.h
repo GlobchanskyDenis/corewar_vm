@@ -90,5 +90,7 @@ void			carriage_read_command(t_car *carriage, t_vm *vm);
 void			carriage_make_step(t_car *carriage, t_vm *vm);
 void			find_n_del_carriage(t_car *carriage, t_vm *vm);
 void			init_command(t_vm *vm);
+void			*get_bytes(void *dst, unsigned char *arena, short start, \
+		short len);
 
 #endif
