@@ -6,7 +6,7 @@
 /*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:16:17 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/23 17:13:41 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/11/24 19:07:15 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,28 @@ static t_vm	*create_vm_struct(short *tab)
 **	}
 */
 
+void		exe_carriages(t_vm *vm)
+{
+	t_car *tmp;
+
+	tmp = vm->car;
+	while (tmp)
+	{
+		tmp->cycles_to_exe--;
+		if (tmp->cycles_to_exe == 0)
+		{
+			vm->op[tmp->command](tmp, vm);
+			carriage_make_step(tmp, vm);
+		}
+		tmp = tmp->next;
+	}
+}
+
 int			main(int ac, char **av)
 {
 	t_vm	*vm;
-	unsigned int	value;
+	// unsigned int	value;
+	short			check_cycle;
 
 	if (ac < 2 || (ac < 3 && av[1][0] == '-') || ac > MAX_ARGS_NUMBER + 10)
 	{
@@ -57,41 +75,54 @@ int			main(int ac, char **av)
 	if (!(vm = create_vm_struct(preliminary_parse_flags(ac, av))))
 		error_exit(vm, "main - null ptr returned");
 	initialize_all(ac, av, vm);
-	value = 0x70;
-	set_bytes(&value, vm->arena, MEM_SIZE - 4, 1);
-	print_all(vm);
-	if (get_info(vm->arena[MEM_SIZE - 4], 1) == REG_CODE)
-		fprint("This byte is register\n");
-	else if (get_info(vm->arena[MEM_SIZE - 4], 1) == DIR_CODE)
-		fprint("This byte is dir address\n");
-	else if (get_info(vm->arena[MEM_SIZE - 4], 1) == IND_CODE)
-		fprint("This byte is ind address\n");
-	else
-		fprint("Empty\n");
-	if (get_info(vm->arena[MEM_SIZE - 4], 2) == REG_CODE)
-		fprint("This byte is register\n");
-	else if (get_info(vm->arena[MEM_SIZE - 4], 2) == DIR_CODE)
-		fprint("This byte is dir address\n");
-	else if (get_info(vm->arena[MEM_SIZE - 4], 2) == IND_CODE)
-		fprint("This byte is ind address\n");
-	else
-		fprint("Empty\n");
-	if (get_info(vm->arena[MEM_SIZE - 4], 3) == REG_CODE)
-		fprint("This byte is register\n");
-	else if (get_info(vm->arena[MEM_SIZE - 4], 3) == DIR_CODE)
-		fprint("This byte is dir address\n");
-	else if (get_info(vm->arena[MEM_SIZE - 4], 3) == IND_CODE)
-		fprint("This byte is ind address\n");
-	else
-		fprint("Empty\n");
-	if (get_info(vm->arena[MEM_SIZE - 4], 4) == REG_CODE)
-		fprint("This byte is register\n");
-	else if (get_info(vm->arena[MEM_SIZE - 4], 4) == DIR_CODE)
-		fprint("This byte is dir address\n");
-	else if (get_info(vm->arena[MEM_SIZE - 4], 4) == IND_CODE)
-		fprint("This byte is ind address\n");
-	else
-		fprint("Empty\n");
+	// value = 0x70;
+	// set_bytes(&value, vm->arena, MEM_SIZE - 4, 1);
+	// print_all(vm);
+	check_cycle = vm->cycles_to_die;
+	while (vm->cycles_to_die > 0)
+	{
+		if (vm->cycle == check_cycle)
+		{
+			ft_check(vm);
+			check_cycle += vm->cycles_to_die;
+		}
+		exe_carriages(vm);
+		vm->cycle++;
+	}
+	fprint("Last player alive: %d\n", vm->last_alive);
 	free_exit(vm, "its ok!");
 	return (0);
 }
+
+// if (get_info(vm->arena[MEM_SIZE - 4], 1) == REG_CODE)
+// 		fprint("This byte is register\n");
+// 	else if (get_info(vm->arena[MEM_SIZE - 4], 1) == DIR_CODE)
+// 		fprint("This byte is dir address\n");
+// 	else if (get_info(vm->arena[MEM_SIZE - 4], 1) == IND_CODE)
+// 		fprint("This byte is ind address\n");
+// 	else
+// 		fprint("Empty\n");
+// 	if (get_info(vm->arena[MEM_SIZE - 4], 2) == REG_CODE)
+// 		fprint("This byte is register\n");
+// 	else if (get_info(vm->arena[MEM_SIZE - 4], 2) == DIR_CODE)
+// 		fprint("This byte is dir address\n");
+// 	else if (get_info(vm->arena[MEM_SIZE - 4], 2) == IND_CODE)
+// 		fprint("This byte is ind address\n");
+// 	else
+// 		fprint("Empty\n");
+// 	if (get_info(vm->arena[MEM_SIZE - 4], 3) == REG_CODE)
+// 		fprint("This byte is register\n");
+// 	else if (get_info(vm->arena[MEM_SIZE - 4], 3) == DIR_CODE)
+// 		fprint("This byte is dir address\n");
+// 	else if (get_info(vm->arena[MEM_SIZE - 4], 3) == IND_CODE)
+// 		fprint("This byte is ind address\n");
+// 	else
+// 		fprint("Empty\n");
+// 	if (get_info(vm->arena[MEM_SIZE - 4], 4) == REG_CODE)
+// 		fprint("This byte is register\n");
+// 	else if (get_info(vm->arena[MEM_SIZE - 4], 4) == DIR_CODE)
+// 		fprint("This byte is dir address\n");
+// 	else if (get_info(vm->arena[MEM_SIZE - 4], 4) == IND_CODE)
+// 		fprint("This byte is ind address\n");
+// 	else
+// 		fprint("Empty\n");

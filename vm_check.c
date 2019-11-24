@@ -1,28 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   live.c                                             :+:      :+:    :+:   */
+/*   vm_check.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/23 16:19:40 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/24 19:06:28 by jmaynard         ###   ########.fr       */
+/*   Created: 2019/11/16 21:22:32 by jmaynard          #+#    #+#             */
+/*   Updated: 2019/11/24 19:09:48 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
 
-void	op_live(t_car *carriage, t_vm *vm)
+void	ft_check(t_vm *vm)
 {
-	int player;
+	t_car *tmp;
 
-	carriage->last_live_cycle = vm->cycle;
-	vm->lives_for_cycle++;
-	get_bytes(&player, vm->arena, carriage->position + 1, 4);
-	if (player == (-1) * carriage->reg[0])
+	tmp = vm->car;
+	vm->checks++;
+	while (tmp)
 	{
-		vm->player[player].last_live_cycle = vm->cycle;
-		vm->last_alive = player;
+		if (tmp->last_live_cycle + vm->cycles_to_die < vm->cycle)
+			find_n_del_carriage(vm, tmp);
+		tmp = tmp->next;
 	}
-	carriage->step = DIR_SIZE;
+	if (vm->lives_for_cycle >= NBR_LIVE)
+	{
+		vm->cycles_to_die -= CYCLE_DELTA;
+		vm->checks = 0;
+	}
+	else if (vm->checks == MAX_CHECKS)
+	{
+		vm->cycles_to_die -= CYCLE_DELTA;
+		vm->checks = 0;
+	}
+	vm->lives_for_cycle = 0;
 }
