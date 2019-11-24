@@ -1,32 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   and.c                                              :+:      :+:    :+:   */
+/*   sti.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/23 19:52:31 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/24 16:57:32 by jmaynard         ###   ########.fr       */
+/*   Created: 2019/11/24 16:33:08 by jmaynard          #+#    #+#             */
+/*   Updated: 2019/11/24 16:59:48 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
 
-void	op_and(t_car *carriage, t_vm *vm)
+void	op_sti(t_car *carriage, t_vm *vm)
 {
-	int types;
-	int arg1;
-	int arg2;
-	int reg;
+	int		arg2;
+	int		arg3;
+	int		reg;
+	int		adr;
+	int		types;
 
 	types = get_args_types(vm->arena[carriage->position + 1]);
 	carriage->step = 2;
-	arg1 = get_arg(carriage, vm, types / 1000, 4);
-	arg2 = get_arg(carriage, vm, (types / 100) % 10, 4);
-	get_bytes(&reg, vm->arena, \
-		(carriage->position + carriage->step) % MEM_SIZE, REG_SIZE);
-	carriage->reg[reg] = arg1 & arg2;
-	carriage->carry = 0;
-	if (carriage->reg[reg] == 0)
-		carriage->carry = 1;
+	reg = get_arg(carriage, vm, types / 1000, 2);
+	arg2 = get_arg(carriage, vm, (types / 100) % 10, 2);
+	arg3 = get_arg(carriage, vm, (types / 10) % 10, 2);
+	adr = (carriage->position + (arg2 + arg3) % IDX_MOD) % MEM_SIZE;
+	ft_memcpy(vm->arena[adr], reg, REG_SIZE);
 }

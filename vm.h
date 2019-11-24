@@ -6,7 +6,7 @@
 /*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:18:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/23 16:24:44 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/11/24 16:57:09 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,7 @@ void			*get_bytes(void *dst, unsigned char *arena, short start, \
 void			set_bytes(void *src, unsigned char *arena, short start, \
 		short len);
 short			get_info(unsigned char byte, short arg_nbr);
+int				get_args_types(unsigned char *byte);
+int				get_arg(t_car *c, t_vm *vm, short type, int dir_size);
 
 #endif

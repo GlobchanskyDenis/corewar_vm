@@ -6,22 +6,22 @@
 /*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 19:28:25 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/23 19:46:56 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/11/24 16:59:22 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
 
-// TODO: all positions % MEM_SIZE
-
 void	op_st(t_car *carriage, t_vm *vm)
 {
-	short	arg;
+	int		types;
+	int		arg;
 	int		reg;
 	int		val;
 
+	types = get_args_types(vm->arena[carriage->position + 1]);
 	get_bytes(&reg, vm->arena, (carriage->position + 2) % MEM_SIZE, REG_SIZE);
-	// get arg
+	arg = get_arg(carriage, vm, (types / 100) % 10, 4);
 	if (arg == REG_CODE)
 	{
 		get_bytes(&val, vm->arena, \
