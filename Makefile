@@ -23,7 +23,7 @@ SRC			=	vm_main.c						vm_free_exit.c				\
 				vm_carriage_1.c					vm_carriage_2.c				\
 				vm_initialize_all.c				vm_initialize_game.c		\
 				vm_temp.c						vm_initialize_commands.c	\
-				vm_get_bytes.c
+				vm_get_set.c
 
 OBJ			=	$(addprefix $(DIR_O)/,$(SRC:.c=.o))
 

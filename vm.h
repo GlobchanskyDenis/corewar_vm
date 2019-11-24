@@ -92,5 +92,8 @@ void			find_n_del_carriage(t_car *carriage, t_vm *vm);
 void			init_command(t_vm *vm);
 void			*get_bytes(void *dst, unsigned char *arena, short start, \
 		short len);
+void			set_bytes(void *src, unsigned char *arena, short start, \
+		short len);
+short			get_info(unsigned char byte, short arg_nbr);
 
 #endif
