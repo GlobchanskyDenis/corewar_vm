@@ -6,7 +6,7 @@
 /*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:18:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/24 16:57:09 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/11/24 19:09:46 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,15 @@ typedef struct	s_vm
 	unsigned char	*arena;
 	t_car			*car;
 	t_command		*command_tab;
+	void			(*op[17])(t_car *, t_vm *);
 	short			max_pl;
 	short			flag;
 	short			cycles_to_die;
 	size_t			dump;
 	size_t			cycle;
+	short			checks;
 	int				lives_for_cycle;
+	int				last_alive;
 }				t_vm;
 
 void			error_exit(t_vm *s, char *message);
@@ -97,5 +100,25 @@ void			set_bytes(void *src, unsigned char *arena, short start, \
 short			get_info(unsigned char byte, short arg_nbr);
 int				get_args_types(unsigned char *byte);
 int				get_arg(t_car *c, t_vm *vm, short type, int dir_size);
+
+void			op_add(t_car *carriage, t_vm *vm);
+void			op_aff(t_car *carriage, t_vm *vm);
+void			op_and(t_car *carriage, t_vm *vm);
+void			op_fork(t_car *carriage, t_vm *vm);
+void			op_ld(t_car *carriage, t_vm *vm);
+void			op_ldi(t_car *carriage, t_vm *vm);
+void			op_lfork(t_car *carriage, t_vm *vm);
+void			op_live(t_car *carriage, t_vm *vm);
+void			op_lld(t_car *carriage, t_vm *vm);
+void			op_lldi(t_car *carriage, t_vm *vm);
+void			op_or(t_car *carriage, t_vm *vm);
+void			op_st(t_car *carriage, t_vm *vm);
+void			op_sti(t_car *carriage, t_vm *vm);
+void			op_sub(t_car *carriage, t_vm *vm);
+void			op_xor(t_car *carriage, t_vm *vm);
+void			op_zjmp(t_car *carriage, t_vm *vm);
+
+
+
 
 #endif

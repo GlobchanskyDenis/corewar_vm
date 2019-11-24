@@ -6,7 +6,7 @@
 /*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 16:39:05 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/24 16:58:21 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/11/24 19:39:06 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,8 @@ void	op_lldi(t_car *carriage, t_vm *vm)
 	get_bytes(&val, vm->arena, \
 		(carriage->position + (arg1 + arg2)) % MEM_SIZE, 4);
 	carriage->reg[reg] = val;
+	carriage->carry = 0;
+	if (val == 0)
+		carriage->carry = 1;
 	carriage->step += REG_SIZE;
 }
