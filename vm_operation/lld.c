@@ -6,7 +6,7 @@
 /*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 20:05:37 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/24 17:29:05 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/11/24 20:12:55 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,6 @@ void	op_lld(t_car *carriage, t_vm *vm)
 	}
 	carriage->reg[reg] = val;
 	carriage->carry = 0;
-	if (reg == 0)
+	if (val == 0)
 		carriage->carry = 1;
 }
