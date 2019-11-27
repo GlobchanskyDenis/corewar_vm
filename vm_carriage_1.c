@@ -53,14 +53,17 @@ t_car		*carriage_duplicate(t_car *carriage, t_vm *vm)
 
 void		carriage_read_command(t_car *carriage, t_vm *vm)
 {
-	t_command	command;
+	//t_command	command;
 
 	if (!vm || !carriage || !vm->arena || !vm->command_tab)
 		error_exit(vm, "carriage read command - empty ptr found");
 	carriage->command = vm->arena[carriage->position % MEM_SIZE];
 	if (carriage->command >= COMMAND_AMOUNT)
+	{
 		carriage->command = 0;
-	command = vm->command_tab[(short)carriage->command];
+		fprint("something wrong with command\n");
+	}
+	//command = vm->command_tab[(short)carriage->command];
 	carriage->cycles_to_exe = 1;
 	// carriage->cycles_to_exe = command.cycles_to_exe;
 	// if (command.carry)
@@ -77,7 +80,7 @@ void		carriage_read_command(t_car *carriage, t_vm *vm)
 void		carriage_make_step(t_car *carriage, t_vm *vm)
 {
 	if (!vm || !carriage || !vm->arena)
-		error_exit(vm, "carriage jump - empty ptr found");
+		error_exit(vm, "carriage make step - empty ptr found");
 	carriage->position = (carriage->position + carriage->step) % MEM_SIZE;
 	while (vm->arena[carriage->position] > COMMAND_AMOUNT)
 		carriage->position = (carriage->position + 1) % MEM_SIZE;

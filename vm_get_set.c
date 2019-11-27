@@ -49,16 +49,15 @@ void	set_bytes(void *src, unsigned char *arena, short start, short len)
 	}
 }
 
-void	*get_bytes(void *dst, unsigned char *arena, short start, short len)
+unsigned int	get_bytes(unsigned char *arena, short start, short len, t_vm *vm)
 {
 	short			i;
 	short			position;
-	unsigned int	*ptr;
+	unsigned int	dst;
 
-	if (!arena || !dst || len < 0 || len > 4)
-		return (NULL);
-	ptr = dst;
-	*ptr = 0;
+	if (!arena || !vm || len < 0 || len > 4)
+		error_exit(vm, "get bytes - empty ptr found");
+	dst = 0;
 	i = -1;
 	while (++i < len)
 	{
@@ -66,8 +65,8 @@ void	*get_bytes(void *dst, unsigned char *arena, short start, short len)
 			position = i + start;
 		else
 			position = i + start - MEM_SIZE;
-		*ptr = *ptr << 8;
-		*ptr += (unsigned int)arena[position];
+		dst = dst << 8;
+		dst += (unsigned int)arena[position];
 	}
 	return (dst);
 }
