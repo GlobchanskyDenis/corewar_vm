@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ldi.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 20:09:45 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/24 16:57:58 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/11/27 15:49:50 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vm.h"
+#include "../vm.h"
 
 void	op_ldi(t_car *carriage, t_vm *vm)
 {
@@ -20,7 +20,8 @@ void	op_ldi(t_car *carriage, t_vm *vm)
 	int		val;
 	int		types;
 
-	types = get_args_types(vm->arena[carriage->position + 1]);
+	fprint("operation ldi\n");
+	types = get_args_types(&vm->arena[carriage->position + 1]);
 	carriage->step = 2;
 	arg1 = get_arg(carriage, vm, types / 1000, 2);
 	arg2 = get_arg(carriage, vm, (types / 100) % 10, 2);

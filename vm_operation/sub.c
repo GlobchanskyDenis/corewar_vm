@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   sub.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 19:51:44 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/23 19:52:24 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/11/27 15:51:24 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vm.h"
+#include "../vm.h"
 
 void	op_sub(t_car *carriage, t_vm *vm)
 {
@@ -18,6 +18,7 @@ void	op_sub(t_car *carriage, t_vm *vm)
 	int reg2;
 	int reg3;
 
+	fprint("operation sub\n");
 	get_bytes(&reg1, vm->arena, (carriage->position + 2) % MEM_SIZE, REG_SIZE);
 	get_bytes(&reg2, vm->arena, \
 		(carriage->position + 2 + REG_SIZE) % MEM_SIZE, REG_SIZE);

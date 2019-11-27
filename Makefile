@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+         #
+#    By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/13 12:16:02 by bsabre-c          #+#    #+#              #
-#    Updated: 2019/11/23 16:40:18 by jmaynard         ###   ########.fr        #
+#    Updated: 2019/11/27 14:30:30 by bsabre-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,13 +17,22 @@ FLAGS		= -Wall -Wextra -Werror -g
 DIR_O		=	objects
 
 # files
-SRC			=	vm_main.c						vm_free_exit.c				\
-				vm_reader.c						vm_parse_flags_1.c			\
-				vm_parse_flags_2.c				vm_extract.c				\
-				vm_carriage_1.c					vm_carriage_2.c				\
-				vm_initialize_all.c				vm_initialize_game.c		\
-				vm_temp.c						vm_initialize_commands.c	\
-				vm_get_set.c
+SRC			=	./vm_main.c						./vm_free_exit.c			\
+				./vm_reader.c					./vm_parse_flags_1.c		\
+				./vm_parse_flags_2.c			./vm_extract.c				\
+				./vm_carriage_1.c				./vm_carriage_2.c			\
+				./vm_initialize_all.c			./vm_initialize_game.c		\
+				./vm_temp.c						./vm_initialize_commands.c	\
+				./vm_get_set.c					./vm_check.c				\
+				vm_operation/add.c				vm_operation/aff.c			\
+				vm_operation/and.c				vm_operation/fork.c			\
+				vm_operation/get_arg.c			vm_operation/ld.c			\
+				vm_operation/ldi.c				vm_operation/lfork.c		\
+				vm_operation/live.c				vm_operation/lld.c			\
+				vm_operation/lldi.c				vm_operation/null.c			\
+				vm_operation/or.c				vm_operation/st.c			\
+				vm_operation/sti.c				vm_operation/sub.c			\
+				vm_operation/xor.c				vm_operation/zjmp.c			
 
 OBJ			=	$(addprefix $(DIR_O)/,$(SRC:.c=.o))
 
@@ -43,6 +52,7 @@ $(NAME) : $(OBJ)
 
 $(DIR_O)/%.o: %.c vm.h op.h
 			@mkdir -p $(DIR_O)
+			@mkdir -p $(DIR_O)/vm_operation
 			@gcc $(FLAGS) -o $@ -c $<
 
 clean :

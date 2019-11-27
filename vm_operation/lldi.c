@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   lldi.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 16:39:05 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/24 19:39:06 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/11/27 15:50:36 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vm.h"
+#include "../vm.h"
 
 void	op_lldi(t_car *carriage, t_vm *vm)
 {
@@ -20,7 +20,10 @@ void	op_lldi(t_car *carriage, t_vm *vm)
 	int		val;
 	int		types;
 
-	types = get_args_types(vm->arena[carriage->position + 1]);
+	if (!vm)
+		error_exit(vm, "operation lldi - empty ptr found");
+	fprint("operation lldi\n");
+	types = get_args_types(&vm->arena[carriage->position + 1]);
 	carriage->step = 2;
 	arg1 = get_arg(carriage, vm, types / 1000, 2);
 	arg2 = get_arg(carriage, vm, (types / 100) % 10, 2);

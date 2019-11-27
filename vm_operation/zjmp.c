@@ -3,19 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   zjmp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 20:02:30 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/23 20:05:09 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/11/27 15:51:47 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vm.h"
+#include "../vm.h"
 
 void		op_zjmp(t_car *carriage, t_vm *vm)
 {
 	int		pos;
 
+	fprint("operation zjmp\n");
 	carriage->step = 2;
 	if (carriage->carry == 0)
 		return ;

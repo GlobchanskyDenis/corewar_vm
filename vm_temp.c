@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm_temp.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 00:16:51 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/23 17:13:30 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/11/27 20:38:20 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static void	print_carriages(t_car *car, t_vm *vm)
 		car = car->next;
 	}
 }
-
+/*
 static void	print_arena(unsigned char *arena, t_vm *vm)
 {
 	short	i;
@@ -84,7 +84,7 @@ static void	print_arena(unsigned char *arena, t_vm *vm)
 	while (++i < 64)
 		print_code((char *)(&(arena[i * 64])), 64, vm);
 }
-
+*/
 void		print_all(t_vm *vm)
 {
 	short	i;
@@ -110,6 +110,6 @@ void		print_all(t_vm *vm)
 		print_code(vm->player[i].code, vm->player[i].codesize, vm);
 	}
 	(vm->car) ? print_carriages(vm->car, vm) : fprint("carriages not found\n");
-	(vm->arena) ? print_arena(vm->arena, vm) : fprint("arena not found\n");
+	//(vm->arena) ? print_arena(vm->arena, vm) : fprint("arena not found\n");
 	fprint("---------------------------------------\n");
 }

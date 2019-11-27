@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   add.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 19:47:08 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/23 19:51:37 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/11/27 15:48:52 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vm.h"
+#include "../vm.h"
 
 void	op_add(t_car *carriage, t_vm *vm)
 {
@@ -18,6 +18,7 @@ void	op_add(t_car *carriage, t_vm *vm)
 	int reg2;
 	int reg3;
 
+	fprint("operation add\n");
 	get_bytes(&reg1, vm->arena, (carriage->position + 2) % MEM_SIZE, REG_SIZE);
 	get_bytes(&reg2, vm->arena, \
 		(carriage->position + 2 + REG_SIZE) % MEM_SIZE, REG_SIZE);

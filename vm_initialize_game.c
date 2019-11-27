@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm_initialize_game.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bsabre-c <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 18:25:51 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/22 18:25:53 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/27 20:37:08 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,6 @@ void		initialize_game(unsigned char *arena, t_vm *vm)
 		carriage = add_new_carriage_in_stack(vm);
 		carriage->position = i * step;
 		carriage->reg[0] = -vm->player[i].id;
+		carriage_read_command(carriage, vm);
 	}
 }

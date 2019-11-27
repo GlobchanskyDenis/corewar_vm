@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm_carriage_1.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/16 13:55:50 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/17 14:15:34 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/11/27 17:41:48 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,13 @@ void		carriage_read_command(t_car *carriage, t_vm *vm)
 	if (!vm || !carriage || !vm->arena || !vm->command_tab)
 		error_exit(vm, "carriage read command - empty ptr found");
 	carriage->command = vm->arena[carriage->position % MEM_SIZE];
+	if (carriage->command >= COMMAND_AMOUNT)
+		carriage->command = 0;
 	command = vm->command_tab[(short)carriage->command];
-	carriage->cycles_to_exe = command.cycles_to_exe;
-	if (command.carry)
-		carriage->carry = command.carry;
+	carriage->cycles_to_exe = 1;
+	// carriage->cycles_to_exe = command.cycles_to_exe;
+	// if (command.carry)
+	// 	carriage->carry = command.carry;
 	//carriage->step = command.step;
 }
 

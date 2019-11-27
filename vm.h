@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:18:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/24 19:09:46 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/11/27 16:35:35 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ typedef struct	s_vm
 	unsigned char	*arena;
 	t_car			*car;
 	t_command		*command_tab;
-	void			(*op[17])(t_car *, t_vm *);
+	void			(*operation[17])(t_car *, struct s_vm *);
 	short			max_pl;
 	short			flag;
-	short			cycles_to_die;
+	size_t			cycles_to_die;
 	size_t			dump;
 	size_t			cycle;
 	short			checks;
@@ -117,8 +117,7 @@ void			op_sti(t_car *carriage, t_vm *vm);
 void			op_sub(t_car *carriage, t_vm *vm);
 void			op_xor(t_car *carriage, t_vm *vm);
 void			op_zjmp(t_car *carriage, t_vm *vm);
-
-
-
+void			op_null(t_car *carriage, t_vm *vm);
+void			check(t_vm *vm);
 
 #endif

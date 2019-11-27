@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm_initialize_all.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 18:25:44 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/23 16:25:03 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/11/27 14:38:31 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,4 +101,5 @@ void		initialize_all(int ac, char **av, t_vm *vm)
 	read_files(vm);
 	init_command(vm);
 	initialize_game(vm->arena, vm);
+	vm->cycles_to_die = CYCLE_TO_DIE;
 }

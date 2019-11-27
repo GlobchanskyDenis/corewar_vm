@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ld.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 18:01:24 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/24 20:13:37 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/11/27 15:49:41 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vm.h"
+#include "../vm.h"
 
 void	op_ld(t_car *carriage, t_vm *vm)
 {
@@ -19,7 +19,10 @@ void	op_ld(t_car *carriage, t_vm *vm)
 	int		reg;
 	int		val;
 
-	types = get_args_types(vm->arena[carriage->position + 1]);
+	val = 0;
+	reg = 0;
+	fprint("operation ld\n");
+	types = get_args_types(&vm->arena[carriage->position + 1]);
 	if (types / 1000 == DIR_CODE)
 	{
 		get_bytes(&val, vm->arena, (carriage->position + 2) % MEM_SIZE, DIR_SIZE);

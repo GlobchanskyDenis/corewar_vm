@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm_initialize_commands.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 15:00:10 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/24 18:47:23 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/11/27 17:41:51 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,23 +44,23 @@ static short	get_cycles_to_exe(unsigned c)
 
 void		set_func(t_vm *vm)
 {
-	vm->op[1] = &op_live;
-	vm->op[2] = &op_ld;
-	vm->op[3] = &op_st;
-	vm->op[4] = &op_add;
-	vm->op[5] = &op_sub;
-	vm->op[6] = &op_and;
-	vm->op[7] = &op_or;
-	vm->op[8] = &op_xor;
-	vm->op[9] = &op_zjmp;
-	vm->op[10] = &op_ldi;
-	vm->op[11] = &op_sti;
-	vm->op[12] = &op_fork;
-	vm->op[13] = &op_lld;
-	vm->op[14] = &op_lldi;
-	vm->op[15] = &op_lfork;
-	vm->op[16] = &op_aff;
-	vm->op[0] = NULL;
+	vm->operation[1] = &op_live;
+	vm->operation[2] = &op_ld;
+	vm->operation[3] = &op_st;
+	vm->operation[4] = &op_add;
+	vm->operation[5] = &op_sub;
+	vm->operation[6] = &op_and;
+	vm->operation[7] = &op_or;
+	vm->operation[8] = &op_xor;
+	vm->operation[9] = &op_zjmp;
+	vm->operation[10] = &op_ldi;
+	vm->operation[11] = &op_sti;
+	vm->operation[12] = &op_fork;
+	vm->operation[13] = &op_lld;
+	vm->operation[14] = &op_lldi;
+	vm->operation[15] = &op_lfork;
+	vm->operation[16] = &op_aff;
+	vm->operation[0] = &op_null;
 }
 
 void		init_command(t_vm *vm)
