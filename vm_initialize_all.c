@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 18:25:44 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/27 14:38:31 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/28 19:01:53 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ void		initialize_all(int ac, char **av, t_vm *vm)
 	check_invalid_flag_cases(ac, vm);
 	sort_players_by_id(vm->player, vm->max_pl, vm);
 	read_files(vm);
-	init_command(vm);
 	initialize_game(vm->arena, vm);
-	vm->cycles_to_die = CYCLE_TO_DIE;
+	initialize_operations_array(vm);
 }

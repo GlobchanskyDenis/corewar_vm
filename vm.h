@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:18:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/27 16:35:35 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/28 19:04:31 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,22 @@
 # define COMMAND_AMOUNT			17
 # define USHRT_MAX				65535
 # define UINT_MAX				4294967295
+# define OP_LIVE				1
+# define OP_LD					2
+# define OP_ST					3
+# define OP_ADD					4
+# define OP_SUB					5
+# define OP_AND					6
+# define OP_OR					7
+# define OP_XOR					8
+# define OP_ZJMP				9
+# define OP_LDI					10
+# define OP_STI					11
+# define OP_FORK				12
+# define OP_LLD					13
+# define OP_LLDI				14
+# define OP_LFORK				15
+# define OP_AFF					16
 
 typedef struct	s_pl
 {
@@ -53,11 +69,17 @@ typedef struct	s_car
 	size_t			last_live_cycle;
 }				t_car;
 
-typedef struct	s_command
+typedef struct	s_corewar
 {
-	short			carry;
-	short			cycles_to_exe;
-}				t_command;
+	short			dump_flag;
+	size_t			dump;
+	size_t			cycles_to_die;
+	size_t			cycle;
+	size_t			next_check;
+	short			lives_for_cycle;//?
+	short			last_alive;
+}				t_corewar;
+
 
 typedef struct	s_vm
 {
@@ -65,16 +87,11 @@ typedef struct	s_vm
 	short			*tab;
 	unsigned char	*arena;
 	t_car			*car;
-	t_command		*command_tab;
 	void			(*operation[17])(t_car *, struct s_vm *);
 	short			max_pl;
 	short			flag;
-	size_t			cycles_to_die;
 	size_t			dump;
-	size_t			cycle;
 	short			checks;
-	int				lives_for_cycle;
-	int				last_alive;
 }				t_vm;
 
 void			error_exit(t_vm *s, char *message);
@@ -87,16 +104,17 @@ void			print_all(t_vm *s);
 size_t			extract_number(const char *str, t_vm *vm);
 void			initialize_all(int ac, char **av, t_vm *vm);
 void			initialize_game(unsigned char *arena, t_vm *vm);
+void			initialize_operations_array(t_vm *vm);
 t_car			*add_new_carriage_in_stack(t_vm *vm);
 t_car			*carriage_duplicate(t_car *carriage, t_vm *vm);
 void			carriage_read_command(t_car *carriage, t_vm *vm);
 void			carriage_make_step(t_car *carriage, t_vm *vm);
 void			find_n_del_carriage(t_car *carriage, t_vm *vm);
-void			init_command(t_vm *vm);
 unsigned int	get_bytes(unsigned char *arena, short start, short len, \
 		t_vm *vm);
 void			set_bytes(void *src, unsigned char *arena, short start, \
 		short len);
+short			get_arg_size(unsigned char byte, short operation_nbr);
 short			get_info(unsigned char byte, short arg_nbr);
 int				get_args_types(unsigned char *byte);
 int				get_arg(t_car *c, t_vm *vm, short type, int dir_size);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm_free_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bsabre-c <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:16:09 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/13 12:16:11 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/28 18:28:15 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,6 @@ void		error_exit(t_vm *vm, char *message)
 			free(vm->tab);
 		if (vm->arena)
 			free(vm->arena);
-		if (vm->command_tab)
-			free(vm->command_tab);
 		free(vm);
 	}
 	if (message)
@@ -82,8 +80,6 @@ void		free_exit(t_vm *vm, char *message)
 			free(vm->tab);
 		if (vm->arena)
 			free(vm->arena);
-		if (vm->command_tab)
-			free(vm->command_tab);
 		free(vm);
 	}
 	if (message)
