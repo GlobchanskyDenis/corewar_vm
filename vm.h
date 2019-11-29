@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:18:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/28 19:04:31 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/29 20:17:33 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ typedef struct	s_corewar
 	size_t			cycles_to_die;
 	size_t			cycle;
 	size_t			next_check;
-	short			lives_for_cycle;//?
+	short			lives_for_cycle;
 	short			last_alive;
 }				t_corewar;
 
@@ -90,8 +90,9 @@ typedef struct	s_vm
 	void			(*operation[17])(t_car *, struct s_vm *);
 	short			max_pl;
 	short			flag;
-	size_t			dump;
 	short			checks;
+	size_t			dump;
+	t_corewar		*cw;
 }				t_vm;
 
 void			error_exit(t_vm *s, char *message);
@@ -116,26 +117,28 @@ void			set_bytes(void *src, unsigned char *arena, short start, \
 		short len);
 short			get_arg_size(unsigned char byte, short operation_nbr);
 short			get_info(unsigned char byte, short arg_nbr);
-int				get_args_types(unsigned char *byte);
-int				get_arg(t_car *c, t_vm *vm, short type, int dir_size);
+short			get_execution_length(unsigned char command);
+//int				get_args_types(unsigned char *byte);///
+//int				get_arg(t_car *c, t_vm *vm, short type, int dir_size);///
 
 void			op_add(t_car *carriage, t_vm *vm);
 void			op_aff(t_car *carriage, t_vm *vm);
 void			op_and(t_car *carriage, t_vm *vm);
 void			op_fork(t_car *carriage, t_vm *vm);
-void			op_ld(t_car *carriage, t_vm *vm);
+void			operation_ld(t_car *carriage, t_vm *vm);
 void			op_ldi(t_car *carriage, t_vm *vm);
 void			op_lfork(t_car *carriage, t_vm *vm);
-void			op_live(t_car *carriage, t_vm *vm);
+void			operation_live(t_car *carriage, t_vm *vm);
 void			op_lld(t_car *carriage, t_vm *vm);
 void			op_lldi(t_car *carriage, t_vm *vm);
 void			op_or(t_car *carriage, t_vm *vm);
 void			op_st(t_car *carriage, t_vm *vm);
-void			op_sti(t_car *carriage, t_vm *vm);
+void			operation_sti(t_car *carriage, t_vm *vm);
 void			op_sub(t_car *carriage, t_vm *vm);
 void			op_xor(t_car *carriage, t_vm *vm);
 void			op_zjmp(t_car *carriage, t_vm *vm);
 void			op_null(t_car *carriage, t_vm *vm);
 void			check(t_vm *vm);
+void			corewar(t_vm *vm);
 
 #endif

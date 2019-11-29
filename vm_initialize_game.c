@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 18:25:51 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/28 17:52:19 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/29 16:55:44 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void		initialize_operations_array(t_vm *vm)
 {
-	vm->operation[OP_LIVE] = &op_live;
-	vm->operation[OP_LD] = &op_ld;
+	vm->operation[OP_LIVE] = &operation_live;
+	vm->operation[OP_LD] = &operation_ld;
 	vm->operation[OP_ST] = &op_st;
 	vm->operation[OP_ADD] = &op_add;
 	vm->operation[OP_SUB] = &op_sub;
@@ -24,7 +24,7 @@ void		initialize_operations_array(t_vm *vm)
 	vm->operation[OP_XOR] = &op_xor;
 	vm->operation[OP_ZJMP] = &op_zjmp;
 	vm->operation[OP_LDI] = &op_ldi;
-	vm->operation[OP_STI] = &op_sti;
+	vm->operation[OP_STI] = &operation_sti;
 	vm->operation[OP_FORK] = &op_fork;
 	vm->operation[OP_LLD] = &op_lld;
 	vm->operation[OP_LLDI] = &op_lldi;

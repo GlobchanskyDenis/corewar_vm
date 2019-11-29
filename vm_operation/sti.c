@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 16:33:08 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/28 18:10:36 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/29 20:15:35 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,12 @@
 **	Как получить значение для каждого типа аргумента описано выше.
 */
 
-void	op_sti(t_car *carriage, t_vm *vm)
+void	operation_sti(t_car *carriage, t_vm *vm)
 {
 	unsigned char	types;
 	short			reg_num;
-	unsigned int	arg2;
-	unsigned int	arg3;
+	int				arg2;
+	int				arg3;
 
 	if (!vm || !carriage)
 		error_exit(vm, "operation sti - empty ptr found");

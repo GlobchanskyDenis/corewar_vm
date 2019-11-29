@@ -6,12 +6,12 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/16 21:22:32 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/26 18:44:20 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/29 13:11:53 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
-
+/*
 void	check(t_vm *vm)
 {
 	t_car *tmp;
@@ -36,3 +36,4 @@ void	check(t_vm *vm)
 	}
 	vm->lives_for_cycle = 0;
 }
+*/

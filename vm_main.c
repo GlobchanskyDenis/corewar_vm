@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:16:17 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/28 18:45:40 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/29 15:43:18 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ static t_vm	*create_vm_struct(short *tab)
 		error_exit(NULL, "create_vm_struct - empty ptr found");
 	if (!(vm = (t_vm *)ft_memalloc(sizeof(t_vm))))
 		error_exit(NULL, "create_vm_struct - malloc (vm) returned null");
-	if (!(vm->player = (t_pl *)ft_memalloc(sizeof(t_pl) * tab[0])))
+	vm->max_pl = tab[0];
+	if (!(vm->player = (t_pl *)ft_memalloc(sizeof(t_pl) * vm->max_pl)))
 		error_exit(vm, "create_vm_struct - malloc (player arr) returned null");
 	if (!(vm->arena = (unsigned char *)ft_memalloc(sizeof(unsigned char) * \
 			MEM_SIZE)))
 		error_exit(vm, "create_vm_struct - malloc (arena) returned null");
 	vm->tab = tab;
-	vm->max_pl = tab[0];
 	return (vm);
 }
 
@@ -79,7 +79,7 @@ int			main(int ac, char **av)
 		error_exit(vm, "main - null ptr returned");
 	initialize_all(ac, av, vm);
 	//print_all(vm);
-	corewar(CYCLE_TO_DIE, vm);
+	corewar(vm);
 	free_exit(vm, "its ok!");
 	return (0);
 }

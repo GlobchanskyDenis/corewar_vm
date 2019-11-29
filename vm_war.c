@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 18:13:25 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/28 19:03:28 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/29 15:31:47 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,27 +45,31 @@ static t_corewar	initialize_variables(vm)
 	return (cw);
 }
 
+/*
+**	vm->cw = &cw; <= this is need to operations can have access
+**	to all variables
+*/
+
 void		corewar(t_vm *vm)
 {
 	t_corewar	cw;
-	//size_t	cur_cycle;
 
 	if (!vm)
 		error_exit(vm, "corewar - empty ptr found");
 	cw = initialize_variables(vm);
-	//cur_cycle = 0;
+	vm->cw = &cw;
 	while (cw.cycles_to_die > 0 && ++cw.cycle)
 	{
 		if (vm->flag & FLAG_DUMP && vm->dump <= cw.cycle)
 			dump(vm);
-		if (cw.cycle == next_check)
+		if (cw.cycle ==  cw.next_check)
 		{
-			check(vm);
+			//check(vm);
 			if (cw.cycles_to_die >= CYCLE_DELTA)
 				cw.cycles_to_die -= CYCLE_DELTA;
 			else
 				cw.cycles_to_die = 0;
-			next_check += cw.cycles_to_die;
+			cw.next_check += cw.cycles_to_die;
 		}
 		exe_carriages(vm);
 		cw.cycle++;

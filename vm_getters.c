@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 18:12:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/28 17:51:14 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/29 20:13:03 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,15 +85,15 @@ short	get_execution_length(unsigned char command)
 }
 
 /*
-**	function returns selected bytes from the arena in unsigned int variable
+**	function returns selected bytes from the arena in integer variable
 */
 
-unsigned int	get_bytes(unsigned char *arena, short start, short len, \
+int		get_bytes(unsigned char *arena, short start, short len, \
 		t_vm *vm)
 {
 	short			i;
 	short			position;
-	unsigned int	dst;
+	int				dst;
 
 	if (!arena || !vm || len < 1 || len > 4)
 		error_exit(vm, "get bytes - empty ptr found");
@@ -106,7 +106,7 @@ unsigned int	get_bytes(unsigned char *arena, short start, short len, \
 		else
 			position = i + start - MEM_SIZE;
 		dst = dst << 8;
-		dst += (unsigned int)arena[position];
+		dst += (int)arena[position];
 	}
 	return (dst);
 }

@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/16 13:55:50 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/27 17:41:48 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/29 13:09:55 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,7 @@ t_car		*carriage_duplicate(t_car *carriage, t_vm *vm)
 
 void		carriage_read_command(t_car *carriage, t_vm *vm)
 {
-	//t_command	command;
-
-	if (!vm || !carriage || !vm->arena || !vm->command_tab)
+	if (!vm || !carriage || !vm->arena)
 		error_exit(vm, "carriage read command - empty ptr found");
 	carriage->command = vm->arena[carriage->position % MEM_SIZE];
 	if (carriage->command >= COMMAND_AMOUNT)
@@ -64,7 +62,7 @@ void		carriage_read_command(t_car *carriage, t_vm *vm)
 		fprint("something wrong with command\n");
 	}
 	//command = vm->command_tab[(short)carriage->command];
-	carriage->cycles_to_exe = 1;
+	carriage->cycles_to_exe = get_execution_length(carriage->command);
 	// carriage->cycles_to_exe = command.cycles_to_exe;
 	// if (command.carry)
 	// 	carriage->carry = command.carry;
