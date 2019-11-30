@@ -1,16 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vm_setters.c                                       :+:      :+:    :+:   */
+/*   vm_getters_setters.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 16:38:44 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/28 17:51:12 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/30 20:11:21 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
+
+/*
+**	Function extracts argument (can be register / direct data / indirect data)
+*/
+
+int		get_argument(int value, short type, t_car *carriage, t_vm *vm)
+{
+	if (!vm || !vm->arena || !carriage)
+		error_exit(vm, "get argument - empty ptr found");
+	if (type == REG_CODE && value >= 1 && value <= REG_NUMBER)
+		return (carriage->reg[value - 1]);
+	if (type == DIR_CODE)
+		return (value);
+	if (type == IND_CODE)
+		return (get_ind_data(carriage->position, value, vm));
+	return (0);
+}
 
 /*
 **	set bytes from unsigned integer variable (maximum 4 bytes) to the arena

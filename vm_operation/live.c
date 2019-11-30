@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 16:19:40 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/29 16:43:34 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/30 19:14:49 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,12 @@ void	operation_live(t_car *carriage, t_vm *vm)
 
 	if (!carriage || !vm)
 		error_exit(vm, "operation live - empty ptr found");
-	fprint("operation live\n");
+	fprint("operation live\tcycle %d\tposition %d\n", (int)vm->cw->cycle, (int)carriage->position);
 	carriage->last_live_cycle = vm->cw->cycle;
 	vm->cw->lives_for_cycle++;
 	player_nbr = get_bytes(vm->arena, carriage->position + 1, 4, vm);
-	if (player_nbr == (-1) * (int)carriage->reg[0])
+	if (player_nbr == -carriage->reg[0] && player_nbr <= \
+			(int)vm->max_pl)
 	{
 		vm->player[player_nbr - 1].last_live_cycle = vm->cw->cycle;
 		vm->cw->last_alive = player_nbr;

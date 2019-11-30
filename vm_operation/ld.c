@@ -6,34 +6,11 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 18:01:24 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/29 20:34:08 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/30 19:44:22 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../vm.h"
-
-unsigned int	get_ind_addr(short position, int ind, t_vm *vm)
-{
-	unsigned int	dst;
-	short			new_ind;
-
-	if (!vm || !vm->arena)
-		error_exit(vm, "get indirect address - empty ptr found");
-	new_ind = (short)ind;
-	if (position <= new_ind)
-	{
-		if (new_ind - position > IDX_MOD)
-			dst = (unsigned int)(position + (new_ind - position) % IDX_MOD);
-		dst = (unsigned int)new_ind;
-	}
-	else
-	{
-		if (position + new_ind > IDX_MOD)
-			dst = (unsigned int)(position + (new_ind - position) % IDX_MOD);
-		dst = (unsigned int)new_ind;
-	}
-	return (dst);
-}
 
 /*
 **	Задача этой операции состоит в загрузке значения в регистр. Но её поведение
@@ -57,7 +34,7 @@ unsigned int	get_ind_addr(short position, int ind, t_vm *vm)
 **	the carry
 */
 
-void			operation_ld(t_car *carriage, t_vm *vm)
+void		operation_ld(t_car *carriage, t_vm *vm)
 {
 	unsigned char	types;
 	short			reg_num;
@@ -66,7 +43,7 @@ void			operation_ld(t_car *carriage, t_vm *vm)
 
 	if (!vm || !carriage)
 		error_exit(vm, "operation ld - empty ptr found");
-	fprint("operation ld\n");
+	fprint("operation ld\tcycle %d\tposition %d\n", (int)vm->cw->cycle, (int)carriage->position);
 	/*
 	**	types = get_args_types(&vm->arena[carriage->position + 1]);
 	**	first of all we must get byte that tells us,
@@ -82,40 +59,17 @@ void			operation_ld(t_car *carriage, t_vm *vm)
 	arg1 = get_bytes(vm->arena, (carriage->position + 2) % MEM_SIZE, \
 			arg1_size, vm);
 	reg_num = vm->arena[(carriage->position + 2 + arg1_size) % MEM_SIZE];
+	carriage->step = 3 + arg1_size;
 	if (reg_num > REG_NUMBER || reg_num < 1)
-		error_exit(vm, "operation sti - too big register found");
+		error_exit(vm, "operation ld - too big register found");
 	if (types >> 6 == DIR_CODE)
 		carriage->reg[reg_num - 1] = arg1;
 	else if (types >> 6 == IND_CODE)
-		carriage->reg[reg_num - 1] = (unsigned int)vm->arena[arg1 % IDX_MOD]; // а что если число отрицательное или...
+	{
+		carriage->reg[reg_num - 1] = get_ind_data(carriage->position, arg1, vm);
+		carriage->carry = (carriage->reg[reg_num - 1]) ? 1 : 0;
+	}
 	else
-		error_exit(vm, "operation sti - wrong argument");// kill carriage??
+		error_exit(vm, "operation ld - wrong argument");// kill carriage?? NO!!!! Mb we need to just skip this command??
 	carriage->carry ^= 1;
-	carriage->step = 3 + arg1_size;
-/*
-	val = 0;
-	reg = 0;
-	fprint("operation ld\n");
-	types = get_args_types(&vm->arena[carriage->position + 1]);
-	if (types / 1000 == DIR_CODE)
-	{
-		get_bytes(&val, vm->arena, (carriage->position + 2) % MEM_SIZE, DIR_SIZE);
-		get_bytes(&reg, vm->arena, \
-			(carriage->position + 2 + DIR_SIZE) % MEM_SIZE, REG_SIZE);
-		carriage->step = 2 + DIR_SIZE + REG_SIZE;
-	}
-	else if (types / 1000 == IND_CODE)
-	{
-		get_bytes(&arg, vm->arena, (carriage->position + 2) % MEM_SIZE, IND_SIZE);
-		get_bytes(&val, vm->arena, \
-			(carriage->position + arg % IDX_MOD) % MEM_SIZE, REG_SIZE);
-		get_bytes(&reg, vm->arena, \
-			(carriage->position + 2 + IND_SIZE) % MEM_SIZE, REG_SIZE);
-		carriage->step = 2 + IND_SIZE + REG_SIZE;
-	}
-	carriage->reg[reg] = val;
-	carriage->carry = 0;
-	if (val == 0)
-		carriage->carry = 1;
-*/
 }

@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 18:12:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/29 20:13:03 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/30 20:19:10 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,4 +109,34 @@ int		get_bytes(unsigned char *arena, short start, short len, \
 		dst += (int)arena[position];
 	}
 	return (dst);
+}
+
+/*
+**	Function returns indirect address for all operations. This function
+**	was made for safelly getting address (varification for IDX_MOD, MEM_SIZE
+**	and negative values)
+*/
+
+int		get_ind_data(short position, int ind, t_vm *vm)
+{
+	int		addr;
+
+	if (!vm || !vm->arena)
+		error_exit(vm, "get indirect address - empty ptr found");
+	addr = -1;
+	if (ind >= 0 && ind >= (int)position && ind - (int)position < IDX_MOD)
+		addr = ind % MEM_SIZE;
+	if (ind >= 0 && ind >= (int)position && ind - (int)position >= IDX_MOD)
+		addr = ((int)position + (ind - (int)position) % IDX_MOD) % MEM_SIZE;
+	if (ind >= 0 && ind < (int)position && (int)position - ind < IDX_MOD)
+		addr = ind;
+	if (ind >= 0 && ind < (int)position && (int)position - ind >= IDX_MOD)
+		addr = ((int)position - ((int)position - ind) % IDX_MOD);
+	if (ind < 0 && (int)position - (-ind) % IDX_MOD >= 0)
+		addr = (int)position - (-ind) % IDX_MOD;
+	if (ind < 0 && (int)position - (-ind) % IDX_MOD < 0)
+		addr = MEM_SIZE - ((int)position - (-ind) % IDX_MOD);
+	if (addr < 0)
+		fprint("function get_ind_addr - terrible error!!\n");
+	return ((int)vm->arena[addr]);
 }

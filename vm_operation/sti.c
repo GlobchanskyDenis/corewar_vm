@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 16:33:08 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/29 20:15:35 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/30 20:27:36 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,11 @@ void	operation_sti(t_car *carriage, t_vm *vm)
 	short			reg_num;
 	int				arg2;
 	int				arg3;
+	int				value;
 
 	if (!vm || !carriage)
 		error_exit(vm, "operation sti - empty ptr found");
-	fprint("operation sti\n");
+	fprint("operation sti\tcycle %d\tposition %d\n", (int)vm->cw->cycle, (int)carriage->position);
 	/*
 	**	types = get_args_types(&vm->arena[carriage->position + 1]);
 	**	first of all we must get byte that tells us,
@@ -48,31 +49,21 @@ void	operation_sti(t_car *carriage, t_vm *vm)
 	*/
 	carriage->step = 3 + get_arg_size((types >> 4) & 3, 11) + \
 			get_arg_size((types >> 2) & 3, 11);
-	/*
-	**	! I need to use array of cycles_to_exe before call this function
-	**	carriage->cycles_to_exe = 25;
-	*/
-	carriage->carry = 1;
 	reg_num = vm->arena[(carriage->position + 2) % MEM_SIZE];
 	if (reg_num > REG_NUMBER)
 		error_exit(vm, "operation sti - too big register found");
-	arg2 = get_bytes(vm->arena, (carriage->position + 3) % MEM_SIZE, \
+	value = get_bytes(vm->arena, (carriage->position + 3) % MEM_SIZE, \
 			get_arg_size((types >> 4) & 3, 11), vm);
-	arg3 = get_bytes(vm->arena, (carriage->position + 3 + \
+	arg2 = get_argument(value, (types >> 4) & 3, carriage, vm);//get_bytes(vm->arena, (carriage->position + 3) % MEM_SIZE, get_arg_size((types >> 4) & 3, 11), vm);
+	value = get_bytes(vm->arena, (carriage->position + 3 + \
 			get_arg_size((types >> 4) & 3, 11)) % MEM_SIZE, \
 			get_arg_size((types >> 2) & 3, 11), vm);
+	arg3 = get_argument(value, (types >> 2) & 3, carriage, vm);
 	/*
 	**	if ((types >> 4) & 3 == DIR_CODE && (types >> 2) & 3 == DIR_CODE)
+	**	current position (!!!) + arg2 + arg3
 	*/
 	set_bytes(&carriage->reg[reg_num], vm->arena, (arg2 + arg3) % \
 			IDX_MOD % MEM_SIZE, 1);
 	fprint("operation sti ended\n");
 }
-
-/*
-**	reg = get_arg(carriage, vm, types / 1000, 2);
-**	arg2 = get_arg(carriage, vm, (types / 100) % 10, 2);
-**	arg3 = get_arg(carriage, vm, (types / 10) % 10, 2);
-**	adr = (carriage->position + (arg2 + arg3) % IDX_MOD) % MEM_SIZE;
-**	ft_memcpy(&vm->arena[adr], &reg, REG_SIZE);//// PIZDETS NAXYI YA PISAL FYNKTSIYU SET_BYTE ?????
-*/

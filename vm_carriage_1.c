@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/16 13:55:50 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/29 13:09:55 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/30 14:46:31 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ t_car		*add_new_carriage_in_stack(t_vm *vm)
 		error_exit(vm, "add new carriage in stack - empty ptr found");
 	if (!(carriage = (t_car *)ft_memalloc(sizeof(t_car))))
 		error_exit(vm, "add new carriage in stack - malloc returned null");
-	if (!(carriage->reg = (unsigned int *)ft_memalloc(sizeof(unsigned int) * \
-			REG_NUMBER)))
+	if (!(carriage->reg = (int *)ft_memalloc(sizeof(int) * REG_NUMBER)))
 		error_exit(vm, "add new carriage in stack - malloc returned null");
 	carriage->next = vm->car;
 	vm->car = carriage;
@@ -37,8 +36,7 @@ t_car		*carriage_duplicate(t_car *carriage, t_vm *vm)
 	if (!(dst = (t_car *)ft_memalloc(sizeof(t_car))))
 		error_exit(vm, "carriage duplicate - malloc returned null");
 	ft_memcpy(dst, carriage, sizeof(t_car));
-	if (!(dst->reg = (unsigned int *)ft_memalloc(sizeof(unsigned int) * \
-			REG_NUMBER)))
+	if (!(dst->reg = (int *)ft_memalloc(sizeof(int) * REG_NUMBER)))
 		error_exit(vm, "carriage duplicate - malloc returned null");
 	ft_memcpy(dst->reg, carriage->reg, sizeof(unsigned int) * REG_NUMBER);
 	dst->next = vm->car;
@@ -47,8 +45,8 @@ t_car		*carriage_duplicate(t_car *carriage, t_vm *vm)
 }
 
 /*
-**	if (carriage->command >= COMMAND_AMOUNT)
-**		free_exit(vm, "Warning: unknown command detected!");
+**	Function reads command from byte, where is carriage situated on
+**	and gets the cycles_to_exe for this command
 */
 
 void		carriage_read_command(t_car *carriage, t_vm *vm)
@@ -61,12 +59,7 @@ void		carriage_read_command(t_car *carriage, t_vm *vm)
 		carriage->command = 0;
 		fprint("something wrong with command\n");
 	}
-	//command = vm->command_tab[(short)carriage->command];
 	carriage->cycles_to_exe = get_execution_length(carriage->command);
-	// carriage->cycles_to_exe = command.cycles_to_exe;
-	// if (command.carry)
-	// 	carriage->carry = command.carry;
-	//carriage->step = command.step;
 }
 
 /*

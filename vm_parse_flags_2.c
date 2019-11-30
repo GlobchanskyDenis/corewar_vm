@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm_parse_flags_2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bsabre-c <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 18:49:20 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/15 18:49:37 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/30 13:52:41 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void		parse_flags(int ac, char **av, t_vm *vm)
 			if (i > 1 && vm->tab[i - 2] == FLAG_NBR && \
 					vm->tab[i - 1] == FLAG_ARG)
 			{
-				if (extract_number(av[i - 1], vm) >= USHRT_MAX)
+				if (extract_number(av[i - 1], vm) >= MAX_PLAYERS)
 					free_exit(vm, "Warning: id is too big");
 				if ((vm->player[j].id = extract_number(av[i - 1], vm)) < 1)
 					free_exit(vm, "Warning: id must be bigger than 0");

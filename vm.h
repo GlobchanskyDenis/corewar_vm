@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:18:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/29 20:17:33 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/11/30 20:19:38 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@
 typedef struct	s_pl
 {
 	int				fd;
-	unsigned short	id;
+	short			id;
 	short			codesize;
 	char			*filename;
 	char			*name;
@@ -64,7 +64,7 @@ typedef struct	s_car
 	short			cycles_to_exe;
 	short			command;
 	short			position;
-	unsigned int	*reg;
+	int				*reg;
 	struct s_car	*next;
 	size_t			last_live_cycle;
 }				t_car;
@@ -111,7 +111,7 @@ t_car			*carriage_duplicate(t_car *carriage, t_vm *vm);
 void			carriage_read_command(t_car *carriage, t_vm *vm);
 void			carriage_make_step(t_car *carriage, t_vm *vm);
 void			find_n_del_carriage(t_car *carriage, t_vm *vm);
-unsigned int	get_bytes(unsigned char *arena, short start, short len, \
+int				get_bytes(unsigned char *arena, short start, short len, \
 		t_vm *vm);
 void			set_bytes(void *src, unsigned char *arena, short start, \
 		short len);
@@ -140,5 +140,7 @@ void			op_zjmp(t_car *carriage, t_vm *vm);
 void			op_null(t_car *carriage, t_vm *vm);
 void			check(t_vm *vm);
 void			corewar(t_vm *vm);
+int				get_ind_data(short position, int ind, t_vm *vm);
+int				get_argument(int value, short type, t_car *carriage, t_vm *vm);
 
 #endif
