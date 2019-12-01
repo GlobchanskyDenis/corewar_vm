@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 16:33:08 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/30 20:27:36 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/01 15:08:44 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,12 @@ void	operation_sti(t_car *carriage, t_vm *vm)
 		error_exit(vm, "operation sti - too big register found");
 	value = get_bytes(vm->arena, (carriage->position + 3) % MEM_SIZE, \
 			get_arg_size((types >> 4) & 3, 11), vm);
-	arg2 = get_argument(value, (types >> 4) & 3, carriage, vm);//get_bytes(vm->arena, (carriage->position + 3) % MEM_SIZE, get_arg_size((types >> 4) & 3, 11), vm);
+	arg2 = get_argument(value, (types >> 4) & 3, carriage, vm);
 	value = get_bytes(vm->arena, (carriage->position + 3 + \
 			get_arg_size((types >> 4) & 3, 11)) % MEM_SIZE, \
 			get_arg_size((types >> 2) & 3, 11), vm);
 	arg3 = get_argument(value, (types >> 2) & 3, carriage, vm);
-	/*
-	**	if ((types >> 4) & 3 == DIR_CODE && (types >> 2) & 3 == DIR_CODE)
-	**	current position (!!!) + arg2 + arg3
-	*/
-	set_bytes(&carriage->reg[reg_num], vm->arena, (arg2 + arg3) % \
-			IDX_MOD % MEM_SIZE, 1);
-	fprint("operation sti ended\n");
+	set_bytes(&carriage->reg[reg_num - 1], vm->arena, \
+			get_ind_after_idx(carriage->position, (int)carriage->position +  \
+			arg2 + arg3, vm), 4);
 }

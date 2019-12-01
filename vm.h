@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:18:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/30 20:19:38 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/01 11:43:16 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,5 +142,6 @@ void			check(t_vm *vm);
 void			corewar(t_vm *vm);
 int				get_ind_data(short position, int ind, t_vm *vm);
 int				get_argument(int value, short type, t_car *carriage, t_vm *vm);
+int				get_ind_after_idx(short position, int ind, t_vm *vm);
 
 #endif

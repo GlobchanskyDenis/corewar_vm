@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 18:13:25 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/30 17:48:17 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/01 12:49:18 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void		corewar(t_vm *vm)
 		error_exit(vm, "corewar - empty ptr found");
 	cw = initialize_variables(vm);
 	vm->cw = &cw;
-	print_all(vm);
+	//print_all(vm);
 	while (cw.cycles_to_die > 0 && ++cw.cycle)
 	{
 		if (vm->flag & FLAG_DUMP && vm->dump <= cw.cycle)

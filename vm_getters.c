@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 18:12:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/30 20:19:10 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/01 14:50:54 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ int		get_ind_data(short position, int ind, t_vm *vm)
 	int		addr;
 
 	if (!vm || !vm->arena)
-		error_exit(vm, "get indirect address - empty ptr found");
+		error_exit(vm, "get indirect data - empty ptr found");
 	addr = -1;
 	if (ind >= 0 && ind >= (int)position && ind - (int)position < IDX_MOD)
 		addr = ind % MEM_SIZE;
@@ -137,6 +137,6 @@ int		get_ind_data(short position, int ind, t_vm *vm)
 	if (ind < 0 && (int)position - (-ind) % IDX_MOD < 0)
 		addr = MEM_SIZE - ((int)position - (-ind) % IDX_MOD);
 	if (addr < 0)
-		fprint("function get_ind_addr - terrible error!!\n");
-	return ((int)vm->arena[addr]);
+		fprint("function get_ind_data - terrible error!!\n");
+	return (get_bytes(vm->arena, addr, 4, vm));// return ((int)vm->arena[addr]);
 }
