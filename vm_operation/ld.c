@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 18:01:24 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/30 19:44:22 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/01 16:28:45 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,15 @@ void		operation_ld(t_car *carriage, t_vm *vm)
 	*/
 	types = vm->arena[(carriage->position + 1) % MEM_SIZE];
 	/*
+	**	It need to make check for bad parameters !!!!!
+	**	.name		"A-TEAM"
+	**	.comment	"Plan B isn't exist"
+	**	loop:
+	**	ld 6, r2
+	**	sti r2, %12, %1
+	**	#this code couses seg fault !!!!
+	*/
+	/*
 	**	step = 1(command byte) + 2 params(1-st xx byte 2-nd 1 byte) + 1;
 	**	to know, what size is 2-nd and 3-d parameter, we will
 	**	use function get_arg_size()
@@ -67,6 +76,7 @@ void		operation_ld(t_car *carriage, t_vm *vm)
 	else if (types >> 6 == IND_CODE)
 	{
 		carriage->reg[reg_num - 1] = get_ind_data(carriage->position, arg1, vm);
+		// change of carry differs !!!!
 		carriage->carry = (carriage->reg[reg_num - 1]) ? 1 : 0;
 	}
 	else
