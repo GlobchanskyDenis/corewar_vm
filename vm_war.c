@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm_war.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 18:13:25 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/12/01 12:49:18 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/02 16:19:08 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ static t_corewar	initialize_variables(t_vm *vm)
 	if (!vm)
 		error_exit(vm, "initialize variables - empty ptr found");
 	ft_bzero(&cw, sizeof(t_corewar));
+	cw.cycle = 1;
 	cw.cycles_to_die = CYCLE_TO_DIE;
 	cw.next_check = CYCLE_TO_DIE;
 	cw.last_alive = vm->max_pl;
@@ -64,22 +65,19 @@ void		corewar(t_vm *vm)
 	cw = initialize_variables(vm);
 	vm->cw = &cw;
 	//print_all(vm);
-	while (cw.cycles_to_die > 0 && ++cw.cycle)
+	while (cw.cycles_to_die > 0)
 	{
 		if (vm->flag & FLAG_DUMP && vm->dump <= cw.cycle)
 			dump(vm);
 		if (cw.cycle == cw.next_check)
 		{
-			//check(vm);
-			if (cw.cycles_to_die >= CYCLE_DELTA)
-				cw.cycles_to_die -= CYCLE_DELTA;
-			else
-				cw.cycles_to_die = 0;
-			
+			check(vm);
 			cw.next_check += cw.cycles_to_die;
 		}
 		exe_carriages(vm);
-		//fprint("cycle %d\tcycle to die %d\n", (int)cw.cycle, (int)cw.cycles_to_die);
+		// fprint("cycle %d\tcycle to die %d while %d\n", (int)cw.cycle, (int)cw.cycles_to_die, cw.cycles_to_die > 0);
+
+		cw.cycle++;
 	}
 	fprint("Last player alive: %d\n", cw.last_alive);
 	//print_all(vm);

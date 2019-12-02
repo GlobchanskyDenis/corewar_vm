@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:18:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/12/01 11:43:16 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/02 16:17:10 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ typedef struct	s_corewar
 {
 	short			dump_flag;
 	size_t			dump;
-	size_t			cycles_to_die;
+	int				cycles_to_die; // can be less then 0!
 	size_t			cycle;
 	size_t			next_check;
 	short			lives_for_cycle;

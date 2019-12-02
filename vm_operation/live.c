@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   live.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 16:19:40 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/30 19:14:49 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/02 15:55:49 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,11 @@
 **	that the player whose number is the argument is indeed alive. No argument’s
 **	coding byte, opcode 0x01. Oh and its only argument is on 4 bytes.
 */
+
+//	For each valid execution of the live instruction, 
+// the machine must display: 
+// “A process shows that player X (champion_name) is alive”.
+
 
 void	operation_live(t_car *carriage, t_vm *vm)
 {
