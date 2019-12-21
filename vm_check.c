@@ -6,7 +6,7 @@
 /*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/16 21:22:32 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/12/02 16:02:33 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/12/21 13:02:28 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,6 @@ void	check(t_vm *vm)
 		vm->checks = 0;
 	}
 	vm->cw->lives_for_cycle = 0;
+	if (vm->car == NULL)
+		vm->cw->cycles_to_die = 0;
 }
