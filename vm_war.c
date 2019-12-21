@@ -6,7 +6,7 @@
 /*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 18:13:25 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/12/21 13:07:04 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/12/21 13:13:15 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,14 @@ void		corewar(t_vm *vm)
 	{
 		if (cw.cycle == cw.next_check)
 		{
-			check(vm);
+			if (check(vm))
+				break ;
 			cw.next_check += cw.cycles_to_die;
 		}
 		exe_carriages(vm);
 		if (vm->flag & FLAG_DUMP && vm->dump <= cw.cycle)
 			dump(vm);
-		fprint("cycle %d\tcycle to die %d while %d lives %d\n", (int)cw.cycle, (int)cw.cycles_to_die, cw.cycles_to_die > 0, (int)cw.lives_for_cycle);
+		// fprint("cycle %d\tcycle to die %d while %d lives %d\n", (int)cw.cycle, (int)cw.cycles_to_die, cw.cycles_to_die > 0, (int)cw.lives_for_cycle);
 
 		cw.cycle++;
 	}

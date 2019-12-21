@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:18:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/12/21 10:45:09 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/21 13:12:52 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ void			op_sub(t_car *carriage, t_vm *vm);
 void			op_xor(t_car *carriage, t_vm *vm);
 void			op_zjmp(t_car *carriage, t_vm *vm);
 void			op_null(t_car *carriage, t_vm *vm);
-void			check(t_vm *vm);
+int				check(t_vm *vm);
 void			corewar(t_vm *vm);
 int				get_ind_data(short position, int ind, t_vm *vm);
 int				get_argument(int value, short type, t_car *carriage, t_vm *vm);

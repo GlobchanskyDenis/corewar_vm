@@ -6,13 +6,13 @@
 /*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/16 21:22:32 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/12/21 13:02:28 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/12/21 13:12:39 by jmaynard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
 
-void	check(t_vm *vm)
+int		check(t_vm *vm)
 {
 	t_car *tmp;
 
@@ -36,5 +36,6 @@ void	check(t_vm *vm)
 	}
 	vm->cw->lives_for_cycle = 0;
 	if (vm->car == NULL)
-		vm->cw->cycles_to_die = 0;
+		return (1);
+	return (0);
 }
