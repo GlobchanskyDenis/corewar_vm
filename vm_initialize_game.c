@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 18:25:51 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/30 14:46:32 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/18 16:56:54 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void		initialize_operations_array(t_vm *vm)
 {
 	vm->operation[OP_LIVE] = &operation_live;
 	vm->operation[OP_LD] = &operation_ld;
-	//vm->operation[OP_ST] = &op_st;
+	vm->operation[OP_ST] = &operation_st;
 	//vm->operation[OP_ADD] = &op_add;
 	//vm->operation[OP_SUB] = &op_sub;
 	//vm->operation[OP_AND] = &op_and;

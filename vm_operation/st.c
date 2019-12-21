@@ -6,36 +6,133 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 19:28:25 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/27 15:51:06 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/20 14:42:02 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../vm.h"
 
-void	op_st(t_car *carriage, t_vm *vm)
+static short	is_invalid_parameters(unsigned char types, short reg_num)
 {
-	int		types;
-	int		arg;
-	int		reg;
-	int		val;
 
-	fprint("operation st\n");
-	types = get_args_types(&vm->arena[carriage->position + 1]);
-	get_bytes(&reg, vm->arena, (carriage->position + 2) % MEM_SIZE, REG_SIZE);
-	arg = get_arg(carriage, vm, (types / 100) % 10, 4);
-	if (arg == REG_CODE)
+	if (reg_num > REG_NUMBER || reg_num < 1)
 	{
-		get_bytes(&val, vm->arena, \
-			(carriage->position + 2 + REG_SIZE) % MEM_SIZE, REG_SIZE);
-		carriage->reg[val] = carriage->reg[reg];
-		carriage->step = 2 + REG_SIZE + REG_SIZE;
+		fprint("wrong reg number, skip the command\n");
+		return (1);
 	}
-	else if (arg == IND_CODE)
+	if ((types >> 6 != REG_CODE) || ((types >> 4 & 3) != REG_CODE && \
+			(types >> 4 & 3) != IND_CODE))
 	{
-		get_bytes(&val, vm->arena, \
-			(carriage->position + 2 + REG_SIZE) % MEM_SIZE, IND_SIZE);
-		ft_memcpy(&vm->arena[(carriage->position + arg % IDX_MOD) % MEM_SIZE], \
-			&carriage->reg[reg], REG_SIZE);
-		carriage->step = 2 + IND_SIZE + REG_SIZE;
+		fprint("wrong argument type, skip the command\n");
+		return (1);
+	}	
+	if (get_arg_size(types >> 4 & 3, 2) == 0)
+	{
+		fprint("wrong argument size, skip the command\n");
+		return (1);
 	}
+	return (0);
+}
+
+/*
+**	st: take a registry and a registry or an indirect and store the value of
+**	the registry toward a second argument. Its opcode is 0x03. For example,
+**	st r1, 42 store the value of r1 at the address (PC + (42 % IDX_MOD))
+**
+**	st "store index": 2 params T_REG, T_REG|T_IND
+**	command number 3,	cycles to exe 5, do not changes carry
+**	Эта операция записывает значение регистра, переданного в качестве первого
+**	параметра, по адресу — текущая позиция + (<ЗНАЧЕНИЕ_ВТОРОГО_АРГУМЕНТА> +
+**	<ЗНАЧЕНИЕ_ТРЕТЕГО_АРГУМЕНТА>) % IDX_MOD.
+**	Как получить значение для каждого типа аргумента описано выше.
+*/
+
+void	set_four_bytes_with_indirect(void *src, unsigned char *arena, \
+		short position, short ind)
+{
+	short			i;
+	//short			position;
+	unsigned char	*ptr;
+	short			add_ind;
+
+	if (!arena || !src)
+		return ;
+	fprint("position %d, ind %d\n", (int)position, (int)ind);
+	ptr = src;
+	ptr += 3;//len - 1;
+	i = -1;
+	while (++i < 4)
+	{
+		add_ind = (ind + i) % IDX_MOD;
+		if (position + add_ind < MEM_SIZE)
+			arena[position + add_ind] = *ptr;
+		else
+			arena[position + add_ind - MEM_SIZE] = *ptr;
+		fprint("setted %d to position %d ind %d i %d\n", (int)*ptr, (int)(position + add_ind), (int)ind, (int)i);
+		//	position = i + position - MEM_SIZE;
+		//arena[position] = *ptr;
+		ptr--;
+	}
+}
+
+short	get_ind(unsigned char *arena, short start, t_vm *vm)
+{
+	short			i;
+	short			position;
+	short			dst;
+
+	if (!arena || !vm)
+		error_exit(vm, "get bytes - empty ptr found");
+	if (start < 0 || start > MEM_SIZE)
+		error_exit(vm, "get bytes - wrong start value");
+	dst = 0;
+	i = -1;
+	while (++i < 2)
+	{
+		if (i + start < MEM_SIZE)
+			position = i + start;
+		else
+			position = i + start - MEM_SIZE;
+		dst = dst << 8;
+		dst += (short)arena[position];
+	}
+	return (dst);
+}
+
+void	operation_st(t_car *carriage, t_vm *vm)
+{
+	unsigned char	types;
+	short			reg_num;
+	short			value;
+
+	if (!vm || !carriage)
+		error_exit(vm, "operation st - empty ptr found");
+	fprint("operation st\tcycle %d\tposition %d\n", (int)vm->cw->cycle, (int)carriage->position);
+	types = vm->arena[(carriage->position + 1) % MEM_SIZE];
+	/*
+	**	step = 1(command byte) + 2params(1-st 1 byte 2-nd xx) + 1;
+	**	to know, what size is 2-nd and 3-d parameter, we will
+	**	use function get_arg_size()
+	*/
+	reg_num = vm->arena[(carriage->position + 2) % MEM_SIZE];
+	fprint("reg number %d\n", reg_num);
+	if (is_invalid_parameters(types, reg_num))
+		return ;
+	value = get_bytes(vm->arena, (carriage->position + 3) % MEM_SIZE, \
+			get_arg_size((types >> 4) & 3, 3), vm) % IDX_MOD;
+	fprint("value %d\n", (int)value);
+	if ((types >> 4 & 3) == REG_CODE && (value > REG_NUMBER || value < 1))
+		return ;
+	if ((types >> 4 & 3) == IND_CODE)
+	{
+		value = get_ind(vm->arena, (carriage->position + 3) % MEM_SIZE, vm) % IDX_MOD;
+		fprint("setting bytes\nvalue %d\n", value);
+		//set_four_bytes_with_indirect(&carriage->reg[reg_num - 1], vm->arena, \
+		//		carriage->position, value);
+		set_bytes(&carriage->reg[reg_num - 1], vm->arena, \
+			get_ind_after_idx(carriage->position, value, vm), 4);
+	}
+	else
+		carriage->reg[value - 1] = carriage->reg[reg_num - 1];
+	carriage->step = 3 + get_arg_size((types >> 4) & 3, 3);//
 }

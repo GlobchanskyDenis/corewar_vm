@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   live.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 16:19:40 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/12/02 15:55:49 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/12/18 02:31:36 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,12 @@
 **	coding byte, opcode 0x01. Oh and its only argument is on 4 bytes.
 */
 
-//	For each valid execution of the live instruction, 
-// the machine must display: 
-// “A process shows that player X (champion_name) is alive”.
+/*
+**	Comment from Nastya:
+**	For each valid execution of the live instruction, 
+**	the machine must display: 
+**	“A process shows that player X (champion_name) is alive”.
+*/
 
 
 void	operation_live(t_car *carriage, t_vm *vm)
@@ -40,8 +43,17 @@ void	operation_live(t_car *carriage, t_vm *vm)
 	if (player_nbr == -carriage->reg[0] && player_nbr <= \
 			(int)vm->max_pl)
 	{
-		vm->player[player_nbr - 1].last_live_cycle = vm->cw->cycle;
-		vm->cw->last_alive = player_nbr;
+		if (vm->cw->cycle - vm->player[player_nbr - 1].last_live_cycle < \
+				(size_t)vm->cw->cycles_to_die)
+		{
+			vm->player[player_nbr - 1].last_live_cycle = vm->cw->cycle;
+			vm->cw->last_alive = player_nbr;
+			if (LIVE_PRINT_FLAG)
+			{
+				fprint("A process shows that player %d (%s) is alive\n", \
+						player_nbr, vm->player[player_nbr - 1].name);
+			}
+		}
 	}
 	carriage->step = 5;
 }

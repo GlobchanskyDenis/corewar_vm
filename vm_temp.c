@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 00:16:51 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/12/01 11:48:46 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/20 21:59:46 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static void	print_carriages(t_car *car, t_vm *vm)
 		error_exit(vm, "print carriages - empty ptr found");
 	while (car)
 	{
-		fprint("-- carriage --\ncarry\t\t%d\n", car->carry);
+		fprint("======= carriage =======\ncarry\t\t%d\n", car->carry);
 		fprint("step\t\t%d\ncommand\t\t%d\n", car->step, car->command);
 		fprint("cycles to exe\t%d\n", car->cycles_to_exe);
 		fprint("position\t\t%d\n", car->position);
@@ -69,21 +69,22 @@ static void	print_carriages(t_car *car, t_vm *vm)
 			fprint("%d\t", car->reg[i]);
 		fprint("\n");
 		print_code((char *)(car->reg), 4 * REG_NUMBER, vm);
+		fprint("========================\n");
 		car = car->next;
 	}
 }
 
-static void	print_arena(unsigned char *arena, t_vm *vm)
-{
-	short	i;
+// static void	print_arena(unsigned char *arena, t_vm *vm)
+// {
+// 	short	i;
 
-	if (!arena || !vm)
-		error_exit(vm, "print arena - empty ptr found");
-	fprint("ARENA:\n");
-	i = -1;
-	while (++i < 64)
-		print_code((char *)(&(arena[i * 64])), 64, vm);
-}
+// 	if (!arena || !vm)
+// 		error_exit(vm, "print arena - empty ptr found");
+// 	fprint("ARENA:\n");
+// 	i = -1;
+// 	while (++i < 64)
+// 		print_code((char *)(&(arena[i * 64])), 64, vm);
+// }
 
 void		print_all(t_vm *vm)
 {
@@ -100,7 +101,7 @@ void		print_all(t_vm *vm)
 	i = -1;
 	while (vm->player && ++i < vm->max_pl)
 	{
-		fprint("-- player %d: --\n", (int)(i + 1));
+		fprint("\n======= player %d: ======\n", (int)(i + 1));
 		fprint("filename\t'%s'\n", vm->player[i].filename);
 		fprint("fd\t\t%d\n", vm->player[i].fd);
 		fprint("id\t\t%d\n", (int)vm->player[i].id);

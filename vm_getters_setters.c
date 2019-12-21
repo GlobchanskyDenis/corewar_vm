@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 16:38:44 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/12/01 15:05:50 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/20 19:42:17 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 int		get_argument(int value, short type, t_car *carriage, t_vm *vm)
 {
+	fprint("value %d\n", value);
 	if (!vm || !vm->arena || !carriage)
 		error_exit(vm, "get argument - empty ptr found");
 	if (type == REG_CODE && value >= 1 && value <= REG_NUMBER)
@@ -35,24 +36,53 @@ int		get_argument(int value, short type, t_car *carriage, t_vm *vm)
 **	and negative values)
 */
 
+// int		get_ind_after_idx(short position, int ind, t_vm *vm)
+// {
+// 	if (!vm || !vm->arena)
+// 		error_exit(vm, "get indirect address - empty ptr found");
+// 	fprint("get ind after idx\nposition %d ind %d\n", position, ind);
+// 	if (ind >= 0 && ind >= (int)position && ind - (int)position < IDX_MOD)
+// 		return(ind % MEM_SIZE);
+// 	if (ind >= 0 && ind >= (int)position && ind - (int)position >= IDX_MOD)
+// 		return(((int)position + (ind - (int)position) % IDX_MOD) % MEM_SIZE);
+// 	if (ind >= 0 && ind < (int)position && (int)position - ind < IDX_MOD)
+// 		return(ind);
+// 	if (ind >= 0 && ind < (int)position && (int)position - ind >= IDX_MOD)
+// 		return(((int)position - ((int)position - ind) % IDX_MOD));
+// 	if (ind < 0 && (int)position - (-ind) % IDX_MOD >= 0)
+// 		return((int)position - (-ind) % IDX_MOD);
+// 	if (ind < 0 && (int)position - (-ind) % IDX_MOD < 0)
+// 		return(MEM_SIZE - ((int)position - (-ind) % IDX_MOD));
+// 	fprint("function get_ind_addr - terrible error!!\n");
+// 	return (-1);
+// }
+
 int		get_ind_after_idx(short position, int ind, t_vm *vm)
 {
+	int		dst;
+
 	if (!vm || !vm->arena)
 		error_exit(vm, "get indirect address - empty ptr found");
-	if (ind >= 0 && ind >= (int)position && ind - (int)position < IDX_MOD)
-		return(ind % MEM_SIZE);
-	if (ind >= 0 && ind >= (int)position && ind - (int)position >= IDX_MOD)
-		return(((int)position + (ind - (int)position) % IDX_MOD) % MEM_SIZE);
-	if (ind >= 0 && ind < (int)position && (int)position - ind < IDX_MOD)
-		return(ind);
-	if (ind >= 0 && ind < (int)position && (int)position - ind >= IDX_MOD)
-		return(((int)position - ((int)position - ind) % IDX_MOD));
-	if (ind < 0 && (int)position - (-ind) % IDX_MOD >= 0)
-		return((int)position - (-ind) % IDX_MOD);
-	if (ind < 0 && (int)position - (-ind) % IDX_MOD < 0)
-		return(MEM_SIZE - ((int)position - (-ind) % IDX_MOD));
-	fprint("function get_ind_addr - terrible error!!\n");
-	return (-1);
+	fprint("get ind after idx\nposition %d ind %d\n", position, ind);
+	ind = ind % IDX_MOD;
+	dst = (position + ind) % MEM_SIZE;
+	if (dst < 0)
+		dst = dst + MEM_SIZE;
+	return (dst);
+	// if (ind >= 0 && ind >= (int)position && ind - (int)position < IDX_MOD)
+	// 	return((position + ind) % MEM_SIZE);
+	// if (ind >= 0 && ind >= (int)position && ind - (int)position >= IDX_MOD)
+	// 	return(((int)position + (ind - (int)position) % IDX_MOD) % MEM_SIZE);
+	// if (ind >= 0 && ind < (int)position && (int)position - ind < IDX_MOD)
+	// 	return(ind);
+	// if (ind >= 0 && ind < (int)position && (int)position - ind >= IDX_MOD)
+	// 	return(((int)position - ((int)position - ind) % IDX_MOD));
+	// if (ind < 0 && (int)position - (-ind) % IDX_MOD >= 0)
+	// 	return((int)position - (-ind) % IDX_MOD);
+	// if (ind < 0 && (int)position - (-ind) % IDX_MOD < 0)
+	// 	return(MEM_SIZE - ((int)position - (-ind) % IDX_MOD));
+	// fprint("function get_ind_addr - terrible error!!\n");
+	// return (-1);
 }
 
 /*
@@ -67,6 +97,7 @@ void	set_bytes(void *src, unsigned char *arena, short start, short len)
 
 	if (!arena || !src || len < 1 || len > 4)
 		return ;
+	fprint("start %d\n", start);
 	ptr = src;
 	ptr += len - 1;
 	i = -1;

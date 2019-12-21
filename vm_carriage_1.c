@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/16 13:55:50 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/30 14:46:31 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/18 12:44:47 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void		carriage_make_step(t_car *carriage, t_vm *vm)
 	if (!vm || !carriage || !vm->arena)
 		error_exit(vm, "carriage make step - empty ptr found");
 	carriage->position = (carriage->position + carriage->step) % MEM_SIZE;
-	while (vm->arena[carriage->position] > COMMAND_AMOUNT)
-		carriage->position = (carriage->position + 1) % MEM_SIZE;
+	//while (vm->arena[carriage->position] > COMMAND_AMOUNT)
+	//	carriage->position = (carriage->position + 1) % MEM_SIZE;
 	carriage->step = 0;
 }

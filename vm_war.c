@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm_war.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 18:13:25 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/12/02 16:19:08 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/12/17 18:21:45 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ static void	exe_carriages(t_vm *vm)
 			carriage_make_step(carriage, vm);
 			carriage_read_command(carriage, vm);
 		}
+		fprint("position %d\tcommand %d\n", (int)carriage->position, (int)carriage->command);
 		carriage = carriage->next;
 	}
 }
@@ -67,15 +68,15 @@ void		corewar(t_vm *vm)
 	//print_all(vm);
 	while (cw.cycles_to_die > 0)
 	{
-		if (vm->flag & FLAG_DUMP && vm->dump <= cw.cycle)
-			dump(vm);
 		if (cw.cycle == cw.next_check)
 		{
 			check(vm);
 			cw.next_check += cw.cycles_to_die;
 		}
 		exe_carriages(vm);
-		// fprint("cycle %d\tcycle to die %d while %d\n", (int)cw.cycle, (int)cw.cycles_to_die, cw.cycles_to_die > 0);
+		if (vm->flag & FLAG_DUMP && vm->dump <= cw.cycle)
+			dump(vm);
+		//fprint("cycle %d\tcycle to die %d while %d\n", (int)cw.cycle, (int)cw.cycles_to_die, cw.cycles_to_die > 0);
 
 		cw.cycle++;
 	}

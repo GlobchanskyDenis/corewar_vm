@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 18:12:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/12/01 14:50:54 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/19 19:20:02 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,11 @@ short	get_execution_length(unsigned char command)
 
 /*
 **	function returns selected bytes from the arena in integer variable
+**
+**	WARNING!! For security, in this function there is no check for len == 0,
+**	because in this case carriage must skip current command and move forward.
+**	In case of len == 0 you must check for it in further functions to skip
+**	the command.
 */
 
 int		get_bytes(unsigned char *arena, short start, short len, \
@@ -95,8 +100,12 @@ int		get_bytes(unsigned char *arena, short start, short len, \
 	short			position;
 	int				dst;
 
-	if (!arena || !vm || len < 1 || len > 4)
+	if (!arena || !vm)
 		error_exit(vm, "get bytes - empty ptr found");
+	if (len < 0 || len > 4)
+		error_exit(vm, "get bytes - wrong len value");
+	if (start < 0 || start > MEM_SIZE)
+		error_exit(vm, "get bytes - wrong start value");
 	dst = 0;
 	i = -1;
 	while (++i < len)
@@ -138,5 +147,6 @@ int		get_ind_data(short position, int ind, t_vm *vm)
 		addr = MEM_SIZE - ((int)position - (-ind) % IDX_MOD);
 	if (addr < 0)
 		fprint("function get_ind_data - terrible error!!\n");
+	fprint("get_ind_data addr %d\n", addr);
 	return (get_bytes(vm->arena, addr, 4, vm));// return ((int)vm->arena[addr]);
 }

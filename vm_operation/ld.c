@@ -6,11 +6,59 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 18:01:24 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/12/01 16:28:45 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/18 12:32:49 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../vm.h"
+
+/*
+**	static short	is_invalid_parameters(unsigned char types, short reg_num)
+**	{
+**		unsigned char	arg_type;
+**	
+**		if (reg_num > REG_NUMBER || reg_num < 1)
+**		{
+**			fprint("wrong reg number, skip the command\n");
+**			return (1);
+**		}	
+**		arg_type = types >> 6;
+**		if (!(arg_type == DIR_CODE || arg_type == IND_CODE))
+**		{
+**			fprint("wrong argument type, skip the command\n");
+**			return (1);
+**		}	
+**		if (get_arg_size(arg_type, 2) == 0)
+**		{
+**			fprint("wrong argument size, skip the command\n");
+**			return (1);
+**		}	
+**		return (0);
+**	}
+*/
+
+static short	is_invalid_parameters(unsigned char types, short reg_num)
+{
+	//unsigned char	arg_type;
+
+	if (reg_num > REG_NUMBER || reg_num < 1)
+	{
+		fprint("wrong reg number, skip the command\n");
+		return (1);
+	}	
+	if (((DIR_CODE << 6) | (REG_CODE << 4)) != types && ((IND_CODE << 6) | (REG_CODE << 4)) != types)
+	{
+		fprint("wrong argument type, skip the command\n");
+		fprint("types = %d => %d cases %d %d\n", types, types >> 6, (DIR_CODE << 0), (IND_CODE << 6));
+		return (1);
+	}	
+	if (get_arg_size(types >> 6, 2) == 0)
+	{
+		fprint("wrong argument size, skip the command\n");
+		return (1);
+	}	
+	return (0);
+}
 
 /*
 **	Задача этой операции состоит в загрузке значения в регистр. Но её поведение
@@ -69,17 +117,16 @@ void		operation_ld(t_car *carriage, t_vm *vm)
 			arg1_size, vm);
 	reg_num = vm->arena[(carriage->position + 2 + arg1_size) % MEM_SIZE];
 	carriage->step = 3 + arg1_size;
-	if (reg_num > REG_NUMBER || reg_num < 1)
-		error_exit(vm, "operation ld - too big register found");
+	if (is_invalid_parameters(types, reg_num))
+		return ;
 	if (types >> 6 == DIR_CODE)
 		carriage->reg[reg_num - 1] = arg1;
 	else if (types >> 6 == IND_CODE)
 	{
 		carriage->reg[reg_num - 1] = get_ind_data(carriage->position, arg1, vm);
-		// change of carry differs !!!!
-		carriage->carry = (carriage->reg[reg_num - 1]) ? 1 : 0;
+		carriage->carry = (carriage->reg[reg_num - 1]) ? 1 : 0;// change of carry differs !!!!
 	}
-	else
-		error_exit(vm, "operation ld - wrong argument");// kill carriage?? NO!!!! Mb we need to just skip this command??
-	carriage->carry ^= 1;
+	//else
+	//	error_exit(vm, "operation ld - wrong argument");// kill carriage?? NO!!!! Mb we need to just skip this command??
+	//carriage->carry ^= 1;
 }
