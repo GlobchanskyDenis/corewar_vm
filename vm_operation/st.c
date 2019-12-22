@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 19:28:25 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/12/20 14:42:02 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/21 21:22:56 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,58 +47,6 @@ static short	is_invalid_parameters(unsigned char types, short reg_num)
 **	Как получить значение для каждого типа аргумента описано выше.
 */
 
-void	set_four_bytes_with_indirect(void *src, unsigned char *arena, \
-		short position, short ind)
-{
-	short			i;
-	//short			position;
-	unsigned char	*ptr;
-	short			add_ind;
-
-	if (!arena || !src)
-		return ;
-	fprint("position %d, ind %d\n", (int)position, (int)ind);
-	ptr = src;
-	ptr += 3;//len - 1;
-	i = -1;
-	while (++i < 4)
-	{
-		add_ind = (ind + i) % IDX_MOD;
-		if (position + add_ind < MEM_SIZE)
-			arena[position + add_ind] = *ptr;
-		else
-			arena[position + add_ind - MEM_SIZE] = *ptr;
-		fprint("setted %d to position %d ind %d i %d\n", (int)*ptr, (int)(position + add_ind), (int)ind, (int)i);
-		//	position = i + position - MEM_SIZE;
-		//arena[position] = *ptr;
-		ptr--;
-	}
-}
-
-short	get_ind(unsigned char *arena, short start, t_vm *vm)
-{
-	short			i;
-	short			position;
-	short			dst;
-
-	if (!arena || !vm)
-		error_exit(vm, "get bytes - empty ptr found");
-	if (start < 0 || start > MEM_SIZE)
-		error_exit(vm, "get bytes - wrong start value");
-	dst = 0;
-	i = -1;
-	while (++i < 2)
-	{
-		if (i + start < MEM_SIZE)
-			position = i + start;
-		else
-			position = i + start - MEM_SIZE;
-		dst = dst << 8;
-		dst += (short)arena[position];
-	}
-	return (dst);
-}
-
 void	operation_st(t_car *carriage, t_vm *vm)
 {
 	unsigned char	types;
@@ -114,25 +62,19 @@ void	operation_st(t_car *carriage, t_vm *vm)
 	**	to know, what size is 2-nd and 3-d parameter, we will
 	**	use function get_arg_size()
 	*/
+	carriage->step = 2 + get_arg_size(types >> 6, 3) + get_arg_size((types >> 4) & 3, 3);//
 	reg_num = vm->arena[(carriage->position + 2) % MEM_SIZE];
-	fprint("reg number %d\n", reg_num);
+	//fprint("reg number %d\n", reg_num);
 	if (is_invalid_parameters(types, reg_num))
 		return ;
 	value = get_bytes(vm->arena, (carriage->position + 3) % MEM_SIZE, \
 			get_arg_size((types >> 4) & 3, 3), vm) % IDX_MOD;
-	fprint("value %d\n", (int)value);
+	//fprint("value %d\n", (int)value);
 	if ((types >> 4 & 3) == REG_CODE && (value > REG_NUMBER || value < 1))
 		return ;
 	if ((types >> 4 & 3) == IND_CODE)
-	{
-		value = get_ind(vm->arena, (carriage->position + 3) % MEM_SIZE, vm) % IDX_MOD;
-		fprint("setting bytes\nvalue %d\n", value);
-		//set_four_bytes_with_indirect(&carriage->reg[reg_num - 1], vm->arena, \
-		//		carriage->position, value);
 		set_bytes(&carriage->reg[reg_num - 1], vm->arena, \
-			get_ind_after_idx(carriage->position, value, vm), 4);
-	}
+			calc_ind_address(carriage->position, value, vm), 4);
 	else
 		carriage->reg[value - 1] = carriage->reg[reg_num - 1];
-	carriage->step = 3 + get_arg_size((types >> 4) & 3, 3);//
 }

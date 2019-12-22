@@ -6,27 +6,57 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 19:47:08 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/11/27 15:48:52 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/22 20:00:42 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../vm.h"
 
-void	op_add(t_car *carriage, t_vm *vm)
-{
-	int reg1;
-	int reg2;
-	int reg3;
+static short	is_invalid_parameters(unsigned char types, int reg1, int reg2, \
+		int reg3)
+{	
+	if ((REG_CODE << 6) & (REG_CODE << 4) & (REG_CODE << 2) != types)
+	{
+		fprint("wrong argument type, skip the command\n");
+		fprint("types = %d\tshould be %d\n", types, \
+				(REG_CODE << 6) & (REG_CODE << 4) & (REG_CODE << 2));
+		return (1);
+	}
+	if (reg1 > REG_NUMBER || reg1 < 1 || reg2 > REG_NUMBER || reg2 < 1 || \
+			reg3 > REG_NUMBER || reg3 < 1)
+	{
+		fprint("wrong reg number, skip the command\n");
+		fprint("reg1 %d\treg2 %d\treg3 %d\n", reg1, reg2, reg3);
+		return (1);
+	}
+	return (0);
+}
 
-	fprint("operation add\n");
-	get_bytes(&reg1, vm->arena, (carriage->position + 2) % MEM_SIZE, REG_SIZE);
-	get_bytes(&reg2, vm->arena, \
-		(carriage->position + 2 + REG_SIZE) % MEM_SIZE, REG_SIZE);
-	get_bytes(&reg3, vm->arena, \
-		(carriage->position + 2 + 2 * REG_SIZE) % MEM_SIZE, REG_SIZE);
-	carriage->step = 2 + 3 * REG_SIZE;
-	carriage->reg[reg3] = carriage->reg[reg1] + carriage->reg[reg2];
-	carriage->carry = 0;
-	if (carriage->reg[reg3] == 0)
-		carriage->carry = 1;
+void	operation_add(t_car *carriage, t_vm *vm)
+{
+	int		types;
+	int		reg1;
+	int		reg2;
+	int		reg3;
+
+	if (!vm || !carriage)
+		error_exit(vm, "operation add - empty ptr found");
+	fprint("operation add\tcycle %d\tposition %d\n", (int)vm->cw->cycle, (int)carriage->position);
+	types = vm->arena[(carriage->position + 1) % MEM_SIZE];
+	
+	carriage->step = 2 + get_arg_size(types >> 6, 4) + \
+			get_arg_size(types >> 4 & 3, 4) + \
+			get_arg_size(types >> 2 & 3, 4);
+
+	reg1 = (int)vm->arena[(carriage->position + 2) % MEM_SIZE];
+	reg2 = (int)vm->arena[(carriage->position + 3) % MEM_SIZE];
+	reg3 = (int)vm->arena[(carriage->position + 4) % MEM_SIZE];
+	
+	if (is_invalid_parameters(types, reg1, reg2, reg3))
+		return ;
+	
+	carriage->reg[reg3 - 1] = carriage->reg[reg1 - 1] + \
+			carriage->reg[reg2 - 1];
+	
+	carriage->carry = (carriage->reg[reg3 - 1]) ? 0 : 1;
 }

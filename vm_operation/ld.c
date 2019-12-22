@@ -6,41 +6,14 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 18:01:24 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/12/18 12:32:49 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/22 19:57:55 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../vm.h"
 
-/*
-**	static short	is_invalid_parameters(unsigned char types, short reg_num)
-**	{
-**		unsigned char	arg_type;
-**	
-**		if (reg_num > REG_NUMBER || reg_num < 1)
-**		{
-**			fprint("wrong reg number, skip the command\n");
-**			return (1);
-**		}	
-**		arg_type = types >> 6;
-**		if (!(arg_type == DIR_CODE || arg_type == IND_CODE))
-**		{
-**			fprint("wrong argument type, skip the command\n");
-**			return (1);
-**		}	
-**		if (get_arg_size(arg_type, 2) == 0)
-**		{
-**			fprint("wrong argument size, skip the command\n");
-**			return (1);
-**		}	
-**		return (0);
-**	}
-*/
-
 static short	is_invalid_parameters(unsigned char types, short reg_num)
 {
-	//unsigned char	arg_type;
-
 	if (reg_num > REG_NUMBER || reg_num < 1)
 	{
 		fprint("wrong reg number, skip the command\n");
@@ -92,41 +65,23 @@ void		operation_ld(t_car *carriage, t_vm *vm)
 	if (!vm || !carriage)
 		error_exit(vm, "operation ld - empty ptr found");
 	fprint("operation ld\tcycle %d\tposition %d\n", (int)vm->cw->cycle, (int)carriage->position);
-	/*
-	**	types = get_args_types(&vm->arena[carriage->position + 1]);
-	**	first of all we must get byte that tells us,
-	**	what type of arguments do we have
-	*/
 	types = vm->arena[(carriage->position + 1) % MEM_SIZE];
-	/*
-	**	It need to make check for bad parameters !!!!!
-	**	.name		"A-TEAM"
-	**	.comment	"Plan B isn't exist"
-	**	loop:
-	**	ld 6, r2
-	**	sti r2, %12, %1
-	**	#this code couses seg fault !!!!
-	*/
-	/*
-	**	step = 1(command byte) + 2 params(1-st xx byte 2-nd 1 byte) + 1;
-	**	to know, what size is 2-nd and 3-d parameter, we will
-	**	use function get_arg_size()
-	*/
+	
 	arg1_size = get_arg_size(types >> 6, 2);
+	carriage->step = 2 + arg1_size + get_arg_size((types >> 4) & 3, 2);
+
 	arg1 = get_bytes(vm->arena, (carriage->position + 2) % MEM_SIZE, \
 			arg1_size, vm);
+
 	reg_num = vm->arena[(carriage->position + 2 + arg1_size) % MEM_SIZE];
-	carriage->step = 3 + arg1_size;
 	if (is_invalid_parameters(types, reg_num))
 		return ;
 	if (types >> 6 == DIR_CODE)
-		carriage->reg[reg_num - 1] = arg1;
-	else if (types >> 6 == IND_CODE)
 	{
-		carriage->reg[reg_num - 1] = get_ind_data(carriage->position, arg1, vm);
-		carriage->carry = (carriage->reg[reg_num - 1]) ? 1 : 0;// change of carry differs !!!!
+		carriage->reg[reg_num - 1] = arg1;
+		carriage->carry = (carriage->reg[reg_num - 1]) ? 0 : 1;
 	}
-	//else
-	//	error_exit(vm, "operation ld - wrong argument");// kill carriage?? NO!!!! Mb we need to just skip this command??
-	//carriage->carry ^= 1;
+	else if (types >> 6 == IND_CODE)
+		carriage->reg[reg_num - 1] = get_bytes(vm->arena, \
+				calc_ind_address(carriage->position, arg1, vm), 4, vm);
 }

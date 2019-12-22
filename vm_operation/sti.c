@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 16:33:08 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/12/20 20:03:02 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/21 17:58:41 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,18 +100,20 @@ void	operation_sti(t_car *carriage, t_vm *vm)
 	**	to know, what size is 2-nd and 3-d parameter, we will
 	**	use function get_arg_size()
 	*/
-	carriage->step = 3 + get_arg_size((types >> 4) & 3, 11) + \
-			get_arg_size((types >> 2) & 3, 11);
+	carriage->step = 2 + get_arg_size(types >> 6, 11) + get_arg_size((types \
+			>> 4) & 3, 11) + get_arg_size((types >> 2) & 3, 11);
 	reg_num = vm->arena[(carriage->position + 2) % MEM_SIZE];
 	if (is_invalid_parameters(types, reg_num))
 		return ;
 	value = get_bytes(vm->arena, (carriage->position + 3) % MEM_SIZE, \
 			get_arg_size((types >> 4) & 3, 11), vm);
 	arg2 = get_argument(value, (types >> 4) & 3, carriage, vm);
+	fprint("value %d\targ2 %d\n", value, arg2);
 	value = get_bytes(vm->arena, (carriage->position + 3 + \
 			get_arg_size((types >> 4) & 3, 11)) % MEM_SIZE, \
 			get_arg_size((types >> 2) & 3, 11), vm);
 	arg3 = get_argument(value, (types >> 2) & 3, carriage, vm);
+	fprint("value %d\targ3 %d\n", value, arg3);
 	set_bytes(&carriage->reg[reg_num - 1], vm->arena, \
-			get_ind_after_idx(carriage->position, arg2 + arg3, vm), 4);
+			calc_ind_address(carriage->position, arg2 + arg3, vm), 4);
 }

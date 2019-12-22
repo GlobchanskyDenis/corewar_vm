@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:18:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/12/21 13:12:52 by jmaynard         ###   ########.fr       */
+/*   Updated: 2019/12/22 21:15:47 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,33 +117,29 @@ int				get_bytes(unsigned char *arena, short start, short len, \
 void			set_bytes(void *src, unsigned char *arena, short start, \
 		short len);
 short			get_arg_size(unsigned char byte, short operation_nbr);
-short			get_info(unsigned char byte, short arg_nbr);
 short			get_execution_length(unsigned char command);
 void			print_arena(unsigned char *arena, t_vm *vm);
-//int				get_args_types(unsigned char *byte);///
-//int				get_arg(t_car *c, t_vm *vm, short type, int dir_size);///
+int				calc_ind_address(short position, int ind, t_vm *vm);
+int				get_argument(int value, short type, t_car *carriage, t_vm *vm);
+int				check(t_vm *vm);
+void			corewar(t_vm *vm);
 
+void			operation_null(t_car *carriage, t_vm *vm);
 void			operation_live(t_car *carriage, t_vm *vm);
 void			operation_ld(t_car *carriage, t_vm *vm);
 void			operation_st(t_car *carriage, t_vm *vm);
-void			op_add(t_car *carriage, t_vm *vm);
-void			op_aff(t_car *carriage, t_vm *vm);
-void			op_and(t_car *carriage, t_vm *vm);
+void			operation_add(t_car *carriage, t_vm *vm);
+void			operation_sub(t_car *carriage, t_vm *vm);
+void			operation_and(t_car *carriage, t_vm *vm);
+void			operation_or(t_car *carriage, t_vm *vm);
+void			operation_xor(t_car *carriage, t_vm *vm);
+void			operation_zjmp(t_car *carriage, t_vm *vm);
+void			operation_ldi(t_car *carriage, t_vm *vm);
+void			operation_sti(t_car *carriage, t_vm *vm);
 void			op_fork(t_car *carriage, t_vm *vm);
-void			op_ldi(t_car *carriage, t_vm *vm);
-void			op_lfork(t_car *carriage, t_vm *vm);
 void			op_lld(t_car *carriage, t_vm *vm);
 void			op_lldi(t_car *carriage, t_vm *vm);
-void			op_or(t_car *carriage, t_vm *vm);
-void			operation_sti(t_car *carriage, t_vm *vm);
-void			op_sub(t_car *carriage, t_vm *vm);
-void			op_xor(t_car *carriage, t_vm *vm);
-void			op_zjmp(t_car *carriage, t_vm *vm);
-void			op_null(t_car *carriage, t_vm *vm);
-int				check(t_vm *vm);
-void			corewar(t_vm *vm);
-int				get_ind_data(short position, int ind, t_vm *vm);
-int				get_argument(int value, short type, t_car *carriage, t_vm *vm);
-int				get_ind_after_idx(short position, int ind, t_vm *vm);
+void			op_lfork(t_car *carriage, t_vm *vm);
+void			op_aff(t_car *carriage, t_vm *vm);
 
 #endif
