@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/16 13:55:50 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/12/21 19:31:56 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/02 15:39:04 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,11 @@ t_car		*add_new_carriage_in_stack(t_vm *vm)
 		error_exit(vm, "add new carriage in stack - empty ptr found");
 	if (!(carriage = (t_car *)ft_memalloc(sizeof(t_car))))
 		error_exit(vm, "add new carriage in stack - malloc returned null");
-	if (!(carriage->reg = (int *)ft_memalloc(sizeof(int) * REG_NUMBER)))
-		error_exit(vm, "add new carriage in stack - malloc returned null");
+	// if (!(carriage->reg = (int *)ft_memalloc(sizeof(int) * REG_NUMBER)))
+	// 	error_exit(vm, "add new carriage in stack - malloc returned null");
+	carriage->id = 1;
+	if (vm->car)
+		carriage->id = vm->car->id + 1;
 	carriage->next = vm->car;
 	vm->car = carriage;
 	return (carriage);
@@ -36,9 +39,12 @@ t_car		*carriage_duplicate(t_car *carriage, t_vm *vm)
 	if (!(dst = (t_car *)ft_memalloc(sizeof(t_car))))
 		error_exit(vm, "carriage duplicate - malloc returned null");
 	ft_memcpy(dst, carriage, sizeof(t_car));
-	if (!(dst->reg = (int *)ft_memalloc(sizeof(int) * REG_NUMBER)))
-		error_exit(vm, "carriage duplicate - malloc returned null");
-	ft_memcpy(dst->reg, carriage->reg, sizeof(unsigned int) * REG_NUMBER);
+	// if (!(dst->reg = (int *)ft_memalloc(sizeof(int) * REG_NUMBER)))
+	// 	error_exit(vm, "carriage duplicate - malloc returned null");
+	ft_memcpy(dst->reg, carriage->reg, sizeof(int) * REG_NUMBER);
+	dst->id = 1;
+	if (vm->car)
+		dst->id = vm->car->id + 1;
 	dst->next = vm->car;
 	vm->car = dst;
 	return (dst);
@@ -57,7 +63,7 @@ void		carriage_read_command(t_car *carriage, t_vm *vm)
 	if (carriage->command >= COMMAND_AMOUNT)
 	{
 		carriage->command = 0;
-		fprint("something wrong with command\n");
+		//fprint("something wrong with command\n");
 	}
 	carriage->cycles_to_exe = get_execution_length(carriage->command);
 }

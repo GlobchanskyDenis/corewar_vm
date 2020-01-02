@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:18:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/12/22 21:15:47 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/02 15:40:51 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@
 # define OP_LLDI				14
 # define OP_LFORK				15
 # define OP_AFF					16
-# define LIVE_PRINT_FLAG		1
+# define DUMP_COLOR				1
+# define DEBUG_LOG				0
 
 typedef struct	s_pl
 {
@@ -60,12 +61,15 @@ typedef struct	s_pl
 
 typedef struct	s_car
 {
+	short			id;
+	short			owner_id;
 	short			carry;
 	short			step;
 	short			cycles_to_exe;
 	short			command;
 	short			position;
-	int				*reg;
+	// int				*reg;
+	int				reg[REG_NUMBER];
 	struct s_car	*next;
 	size_t			last_live_cycle;
 }				t_car;
@@ -86,6 +90,7 @@ typedef struct	s_vm
 {
 	t_pl			*player;
 	short			*tab;
+	short			*arena_owner;
 	unsigned char	*arena;
 	t_car			*car;
 	void			(*operation[17])(t_car *, struct s_vm *);
@@ -116,10 +121,13 @@ int				get_bytes(unsigned char *arena, short start, short len, \
 		t_vm *vm);
 void			set_bytes(void *src, unsigned char *arena, short start, \
 		short len);
+void			set_owner(short owner_id, short *arena_owner, short start, \
+		short len);
 short			get_arg_size(unsigned char byte, short operation_nbr);
 short			get_execution_length(unsigned char command);
 void			print_arena(unsigned char *arena, t_vm *vm);
 int				calc_ind_address(short position, int ind, t_vm *vm);
+int				calc_long_ind_address(short position, int ind, t_vm *vm);
 int				get_argument(int value, short type, t_car *carriage, t_vm *vm);
 int				check(t_vm *vm);
 void			corewar(t_vm *vm);
@@ -136,10 +144,10 @@ void			operation_xor(t_car *carriage, t_vm *vm);
 void			operation_zjmp(t_car *carriage, t_vm *vm);
 void			operation_ldi(t_car *carriage, t_vm *vm);
 void			operation_sti(t_car *carriage, t_vm *vm);
-void			op_fork(t_car *carriage, t_vm *vm);
-void			op_lld(t_car *carriage, t_vm *vm);
-void			op_lldi(t_car *carriage, t_vm *vm);
-void			op_lfork(t_car *carriage, t_vm *vm);
-void			op_aff(t_car *carriage, t_vm *vm);
+void			operation_fork(t_car *carriage, t_vm *vm);
+void			operation_lld(t_car *carriage, t_vm *vm);
+void			operation_lldi(t_car *carriage, t_vm *vm);
+void			operation_lfork(t_car *carriage, t_vm *vm);
+void			operation_aff(t_car *carriage, t_vm *vm);
 
 #endif

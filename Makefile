@@ -6,12 +6,12 @@
 #    By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/13 12:16:02 by bsabre-c          #+#    #+#              #
-#    Updated: 2019/12/22 21:16:27 by bsabre-c         ###   ########.fr        #
+#    Updated: 2020/01/02 15:03:17 by bsabre-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= corewar
-FLAGS		= -Wall -Wextra -Werror -g
+FLAGS		= -Wall -Wextra -Werror # -g
 
 # directories
 DIR_O		=	objects
@@ -36,16 +36,12 @@ SRC			=	vm_main.c						vm_free_exit.c				\
 							vm_operation/xor.c		\
 							vm_operation/zjmp.c		\
 							vm_operation/sti.c		\
-							vm_operation/ldi.c	
-				#				vm_operation/aff.c			\
-				#				vm_operation/fork.c			\
-				#vm_operation/get_arg.c			vm_operation/ld.c			\
-				#vm_operation/ldi.c				vm_operation/lfork.c		\
-				#vm_operation/live.c				vm_operation/lld.c			\
-				#vm_operation/lldi.c				vm_operation/null.c			\
-				#				vm_operation/st.c			\
-				#vm_operation/sti.c							\
-				#				vm_operation/zjmp.c			
+							vm_operation/ldi.c		\
+							vm_operation/fork.c		\
+							vm_operation/lld.c		\
+							vm_operation/lldi.c		\
+							vm_operation/lfork.c	\
+							vm_operation/aff.c		
 
 OBJ			=	$(addprefix $(DIR_O)/,$(SRC:.c=.o))
 

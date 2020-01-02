@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 16:19:40 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/12/18 02:31:36 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/02 13:25:24 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,29 @@
 **	coding byte, opcode 0x01. Oh and its only argument is on 4 bytes.
 */
 
-/*
-**	Comment from Nastya:
-**	For each valid execution of the live instruction, 
-**	the machine must display: 
-**	“A process shows that player X (champion_name) is alive”.
-*/
+static void	log_live(short carriage_id, int player_nbr)
+{
+	if (!DEBUG_LOG)
+		return ;
+	fprint("P ");
+	if (carriage_id < 1000)
+		ft_putchar(' ');
+	if (carriage_id < 100)
+		ft_putchar(' ');
+	if (carriage_id < 10)
+		ft_putchar(' ');
+	fprint("%d | live %d\n", carriage_id, player_nbr);
+}
 
+/*
+**	OPERATION	LIVE (alive)
+**	OPCODE		ARGUMENT_1
+**	1			T_DIR
+**
+**	Засчитывает что каретка жива (переменная last_alive), если аргумент
+**	совпадает с номером живого чемпиона, то этот чемпион также обновляет свою
+**	переменную last_alive
+*/
 
 void	operation_live(t_car *carriage, t_vm *vm)
 {
@@ -36,24 +52,39 @@ void	operation_live(t_car *carriage, t_vm *vm)
 
 	if (!carriage || !vm)
 		error_exit(vm, "operation live - empty ptr found");
-	fprint("operation live\tcycle %d\tposition %d\n", (int)vm->cw->cycle, (int)carriage->position);
+	//fprint("operation live\tcycle %d\tposition %d\n", (int)vm->cw->cycle, (int)carriage->position);
+
+	// засчитываем операцию live для каретки вне зависимости от аргумента операции
 	carriage->last_live_cycle = vm->cw->cycle;
 	vm->cw->lives_for_cycle++;
+
+	// считываем байты аргумента операции
 	player_nbr = get_bytes(vm->arena, carriage->position + 1, 4, vm);
-	if (player_nbr == -carriage->reg[0] && player_nbr <= \
-			(int)vm->max_pl)
+	carriage->step = 5;
+
+	log_live(carriage->id, player_nbr);
+
+	if (-player_nbr <= (int)vm->max_pl && -player_nbr > 0)
 	{
-		if (vm->cw->cycle - vm->player[player_nbr - 1].last_live_cycle < \
+		//fprint("\tplayer last live cycle %d\n", vm->player[-player_nbr - 1].last_live_cycle);
+		if (vm->cw->cycle - vm->player[-player_nbr - 1].last_live_cycle < \
 				(size_t)vm->cw->cycles_to_die)
 		{
-			vm->player[player_nbr - 1].last_live_cycle = vm->cw->cycle;
-			vm->cw->last_alive = player_nbr;
-			if (LIVE_PRINT_FLAG)
+			vm->player[-player_nbr - 1].last_live_cycle = vm->cw->cycle;
+			vm->cw->last_alive = -player_nbr;
+			if (DEBUG_LOG)
 			{
-				fprint("A process shows that player %d (%s) is alive\n", \
-						player_nbr, vm->player[player_nbr - 1].name);
+				//fprint("A process shows that player %d (%s) is alive\n", \
+				//		-player_nbr, vm->player[-player_nbr - 1].name);
+				fprint("Player %d (%s) is said to be alive\n", -player_nbr, vm->player[-player_nbr - 1].name);
 			}
 		}
+		// else 
+		// 	fprint("it seems that this player already dead\n");
 	}
-	carriage->step = 5;
+	// else	{
+	// 	fprint("cant do live operation at all\t player nbr %d  -r0 %d\n", -player_nbr, carriage->reg[0]);
+		//print_all(vm);
+		//free_exit(vm, "unexpected DUMP !!\n");
+	// }
 }

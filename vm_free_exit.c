@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:16:09 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/28 18:28:15 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/02 15:39:47 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ static void	carriage_free(t_car *carriage)
 	{
 		tmp = carriage;
 		carriage = carriage->next;
-		if (tmp->reg)
-			free(tmp->reg);
+		// if (tmp->reg)
+		// 	free(tmp->reg);
 		free(tmp);
 	}
 }
@@ -80,6 +80,8 @@ void		free_exit(t_vm *vm, char *message)
 			free(vm->tab);
 		if (vm->arena)
 			free(vm->arena);
+		if (vm->arena_owner)
+			free(vm->arena_owner);
 		free(vm);
 	}
 	if (message)

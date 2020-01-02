@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 16:38:44 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/12/22 13:50:44 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/02 15:01:52 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	set_bytes(void *src, unsigned char *arena, short start, short len)
 
 	if (!arena || !src || len < 1 || len > 4)
 		return ;
-	fprint("\tset_bytes start %d\n", start);
+	//fprint("\tset_bytes start %d\n", start);
 	ptr = src;
 	ptr += len - 1;
 	i = -1;
@@ -111,5 +111,20 @@ void	set_bytes(void *src, unsigned char *arena, short start, short len)
 			position = i + start - MEM_SIZE;
 		arena[position] = *ptr;
 		ptr--;
+	}
+}
+
+void	set_owner(short owner_id, short *arena_owner, short start, short len)
+{
+	short			i;
+	short			position;
+	
+	if (!arena_owner || start < 0 || start >= MEM_SIZE || len > CHAMP_MAX_SIZE)
+		return ;
+	i = -1;
+	while (++i < len)
+	{
+		position = (i + start < MEM_SIZE) ? i + start : i + start - MEM_SIZE;
+		arena_owner[position] = owner_id;
 	}
 }

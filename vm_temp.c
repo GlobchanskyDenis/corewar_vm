@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 00:16:51 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/12/20 21:59:46 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2019/12/28 15:19:45 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ static void	print_carriages(t_car *car, t_vm *vm)
 		fprint("======= carriage =======\ncarry\t\t%d\n", car->carry);
 		fprint("step\t\t%d\ncommand\t\t%d\n", car->step, car->command);
 		fprint("cycles to exe\t%d\n", car->cycles_to_exe);
-		fprint("position\t\t%d\n", car->position);
-		fprint("last live cycle\t\t%d\nREGISTERS:\n", car->last_live_cycle);
+		fprint("position\t%d\nid\t\t%d\n", car->position, car->id);
+		fprint("last live cycle\t%d\nREGISTERS:\n", car->last_live_cycle);
 		i = -1;
 		while (++i < REG_NUMBER)
 			fprint("%d\t", car->reg[i]);

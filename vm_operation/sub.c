@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 19:51:44 by jmaynard          #+#    #+#             */
-/*   Updated: 2019/12/22 20:01:57 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/01 21:33:21 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,45 @@
 static short	is_invalid_parameters(unsigned char types, int reg1, int reg2, \
 		int reg3)
 {	
-	if ((REG_CODE << 6) & (REG_CODE << 4) & (REG_CODE << 2) != types)
+	if ((REG_CODE << 6) | (REG_CODE << 4) | (REG_CODE << 2) != types)
 	{
-		fprint("wrong argument type, skip the command\n");
-		fprint("types = %d\tshould be %d\n", types, \
-				(REG_CODE << 6) & (REG_CODE << 4) & (REG_CODE << 2));
+		//fprint("wrong argument type, skip the command\n");
+		//fprint("types = %d\tshould be %d\n", types, \
+		//		(REG_CODE << 6) & (REG_CODE << 4) & (REG_CODE << 2));
 		return (1);
 	}
 	if (reg1 > REG_NUMBER || reg1 < 1 || reg2 > REG_NUMBER || reg2 < 1 || \
 			reg3 > REG_NUMBER || reg3 < 1)
 	{
-		fprint("wrong reg number, skip the command\n");
-		fprint("reg1 %d\treg2 %d\treg3 %d\n", reg1, reg2, reg3);
+		//fprint("wrong reg number, skip the command\n");
+		//fprint("reg1 %d\treg2 %d\treg3 %d\n", reg1, reg2, reg3);
 		return (1);
 	}
 	return (0);
 }
+
+static void	log_sub(short carriage_id, int reg1, int reg2, int reg3)
+{
+	if (!DEBUG_LOG)
+		return ;
+	fprint("P ");
+	if (carriage_id < 1000)
+		ft_putchar(' ');
+	if (carriage_id < 100)
+		ft_putchar(' ');
+	if (carriage_id < 10)
+		ft_putchar(' ');
+	fprint("%d | sub r%d r%d r%d\n", carriage_id, reg1, reg2, reg3);
+}
+
+/*
+**	OPERATION	SUB (subtraction)
+**	OPCODE		ARGUMENT_1		ARGUMENT_2		ARGUMENT_3
+**	5			T_REG			T_REG			T_REG
+**
+**	Записывает в регистр заданный аргументом 3 разницу значений регистров
+**	полученных из аргументов 1 и 2. Меняет carry.
+*/
 
 void	operation_sub(t_car *carriage, t_vm *vm)
 {
@@ -41,7 +64,7 @@ void	operation_sub(t_car *carriage, t_vm *vm)
 
 	if (!vm || !carriage)
 		error_exit(vm, "operation sub - empty ptr found");
-	fprint("operation sub\tcycle %d\tposition %d\n", (int)vm->cw->cycle, (int)carriage->position);
+	// fprint("operation sub\tcycle %d\tposition %d\n", (int)vm->cw->cycle, (int)carriage->position);
 	types = vm->arena[(carriage->position + 1) % MEM_SIZE];
 	
 	carriage->step = 2 + get_arg_size(types >> 6, 5) + \
@@ -51,7 +74,7 @@ void	operation_sub(t_car *carriage, t_vm *vm)
 	reg1 = (int)vm->arena[(carriage->position + 2) % MEM_SIZE];
 	reg2 = (int)vm->arena[(carriage->position + 3) % MEM_SIZE];
 	reg3 = (int)vm->arena[(carriage->position + 4) % MEM_SIZE];
-	
+		
 	if (is_invalid_parameters(types, reg1, reg2, reg3))
 		return ;
 	
@@ -59,4 +82,6 @@ void	operation_sub(t_car *carriage, t_vm *vm)
 			carriage->reg[reg2 - 1];
 	
 	carriage->carry = (carriage->reg[reg3 - 1]) ? 0 : 1;
+
+	log_sub(carriage->id, reg1, reg2, reg3);
 }
