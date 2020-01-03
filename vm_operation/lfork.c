@@ -6,15 +6,15 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 19:04:08 by jmaynard          #+#    #+#             */
-/*   Updated: 2020/01/01 21:31:50 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/03 16:57:01 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../vm.h"
 
-static void	log_lfork(t_car *carriage, int pos)
+inline static void	log_lfork(t_car *carriage, int pos)
 {
-	if (!DEBUG_LOG)
+	if (!(g_flags & FLAG_LOG))
 		return ;
 	fprint("P ");
 	if (carriage->id < 1000)
@@ -36,20 +36,15 @@ static void	log_lfork(t_car *carriage, int pos)
 **	по IDX_MOD.
 */
 
-void	operation_lfork(t_car *carriage, t_vm *vm)
+void				operation_lfork(t_car *carriage, t_vm *vm)
 {
 	t_car	*tmp;
 	int		pos;
-
-	if (!vm || !carriage)
-		error_exit(vm, "operation lfork - empty ptr found");
-	// fprint("operation lfork\tcycle %d\tposition %d\n", (int)vm->cw->cycle, (int)carriage->position);
 
 	pos = get_bytes(vm->arena, (carriage->position + 1) % MEM_SIZE, 2, vm);
 	tmp = carriage_duplicate(carriage, vm);
 	tmp->position = (tmp->position + pos) % MEM_SIZE;
 	carriage_read_command(tmp, vm);
 	carriage->step = 3;
-
 	log_lfork(carriage, pos);
 }

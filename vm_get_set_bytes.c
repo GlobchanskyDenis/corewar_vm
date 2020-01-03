@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 16:38:44 by bsabre-c          #+#    #+#             */
-/*   Updated: 2020/01/02 15:01:52 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/03 17:38:18 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static int	get_2_bytes(unsigned char *arena, short start, t_vm *vm)
 **	the command.
 */
 
-int		get_bytes(unsigned char *arena, short start, short len, \
+int			get_bytes(unsigned char *arena, short start, short len, \
 		t_vm *vm)
 {
 	if (!arena || !vm)
@@ -91,7 +91,7 @@ int		get_bytes(unsigned char *arena, short start, short len, \
 **	set bytes from unsigned integer variable (maximum 4 bytes) to the arena
 */
 
-void	set_bytes(void *src, unsigned char *arena, short start, short len)
+void		set_bytes(void *src, unsigned char *arena, short start, short len)
 {
 	short			i;
 	short			position;
@@ -99,7 +99,6 @@ void	set_bytes(void *src, unsigned char *arena, short start, short len)
 
 	if (!arena || !src || len < 1 || len > 4)
 		return ;
-	//fprint("\tset_bytes start %d\n", start);
 	ptr = src;
 	ptr += len - 1;
 	i = -1;
@@ -114,11 +113,12 @@ void	set_bytes(void *src, unsigned char *arena, short start, short len)
 	}
 }
 
-void	set_owner(short owner_id, short *arena_owner, short start, short len)
+void		set_owner(short owner_id, short *arena_owner, short start, \
+		short len)
 {
 	short			i;
 	short			position;
-	
+
 	if (!arena_owner || start < 0 || start >= MEM_SIZE || len > CHAMP_MAX_SIZE)
 		return ;
 	i = -1;

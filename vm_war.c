@@ -6,23 +6,16 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 18:13:25 by bsabre-c          #+#    #+#             */
-/*   Updated: 2020/01/02 13:25:22 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/03 17:49:57 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vm.h"
 
-static void	dump(t_vm *vm)
-{
-	print_all(vm);
-	free_exit(vm, "DUMP !!");
-}
-
-static void	exe_carriages(t_vm *vm)
+static void			exe_carriages(t_vm *vm)
 {
 	t_car *carriage;
 
-	//fprint("exe cariages\n");
 	carriage = vm->car;
 	while (carriage)
 	{
@@ -57,15 +50,14 @@ static t_corewar	initialize_variables(t_vm *vm)
 	return (cw);
 }
 
-void		introduce(short max_pl, t_vm *vm)
+void				introduce(short max_pl, t_vm *vm)
 {
 	short	nbr;
 	t_pl	player;
 
 	nbr = 0;
 	ft_putstr("Introducing contestants...\n");
-
-	while(nbr < max_pl)
+	while (nbr < max_pl)
 	{
 		player = vm->player[nbr];
 		fprint("* Player %d, weighing %d bytes, ", nbr + 1, player.codesize);
@@ -74,13 +66,13 @@ void		introduce(short max_pl, t_vm *vm)
 	}
 }
 
-void		winner_is(t_corewar cw, t_vm *vm)
+static void			winner_is(t_corewar cw, t_vm *vm)
 {
-	fprint("Contestant %d, \"%s\", has won !\n", cw.last_alive, vm->player[cw.last_alive - 1].name);
-	fprint("cycle %d\n", (int)cw.cycle);
+	fprint("Contestant %d, \"%s\", has won !\n", cw.last_alive, \
+			vm->player[cw.last_alive - 1].name);
 }
 
-void		corewar(t_vm *vm)
+void				corewar(t_vm *vm)
 {
 	t_corewar	cw;
 
@@ -88,10 +80,7 @@ void		corewar(t_vm *vm)
 		error_exit(vm, "corewar - empty ptr found");
 	cw = initialize_variables(vm);
 	vm->cw = &cw;
-
-	// introduction of contestants
 	introduce(vm->max_pl, vm);
-
 	while (cw.cycles_to_die > 0)
 	{
 		if (vm->flag & FLAG_DUMP && vm->dump <= cw.cycle)
@@ -102,7 +91,7 @@ void		corewar(t_vm *vm)
 			cw.next_check += cw.cycles_to_die;
 		}
 		++cw.cycle;
-		if (DEBUG_LOG)
+		if (vm->flag & FLAG_LOG)
 			fprint("It is now cycle %d\n", (int)cw.cycle);
 		exe_carriages(vm);
 	}

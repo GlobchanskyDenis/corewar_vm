@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 18:49:20 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/30 13:52:41 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/03 15:41:51 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,28 +30,64 @@ static void	carefully_open(t_pl *player, char **av, short i, t_vm *vm)
 }
 
 /*
-**	Function handles grafix and dump flags
+**	Function handles complex dump flags
+*/
+
+static void	check_complex_flags(short i, t_vm *vm)
+{
+	if (vm->tab[i] == FLAG_COLOR_DUMP)
+	{
+		if (vm->flag & FLAG_DUMP)
+			free_exit(vm, "Warning: dump flag double inclusion");
+		vm->flag = vm->flag | FLAG_DUMP | FLAG_COLOR_DUMP;
+		vm->tab[i] = FLAG_DUMP;
+	}
+	else if (vm->tab[i] == FLAG_INFO_DUMP)
+	{
+		if (vm->flag & FLAG_DUMP)
+			free_exit(vm, "Warning: dump flag double inclusion");
+		vm->flag = vm->flag | FLAG_DUMP | FLAG_INFO_DUMP;
+		vm->tab[i] = FLAG_DUMP;
+	}
+	else if (vm->tab[i] == FLAG_FULL_DUMP)
+	{
+		if (vm->flag & FLAG_DUMP)
+			free_exit(vm, "Warning: dump flag double inclusion");
+		vm->flag = vm->flag | FLAG_DUMP | FLAG_COLOR_DUMP | FLAG_INFO_DUMP;
+		vm->tab[i] = FLAG_DUMP;
+	}
+}
+
+/*
+**	Function handles grafix, aff, log, dump flags and extracts dump number
 */
 
 static void	check_other_flags(char **av, short i, t_vm *vm)
 {
-	if (!av || !vm)
-		error_exit(vm, "check other flags - empty ptr found");
-	if (vm->tab[i] == FLAG_GRAF)
-	{
-		if (vm->flag & FLAG_GRAF)
-			free_exit(vm, "Warning: grafix flag double inclusion");
+	if (vm->tab[i] == FLAG_GRAF && (vm->flag & FLAG_GRAF))
+		free_exit(vm, "Warning: grafix flag double inclusion");
+	else if (vm->tab[i] == FLAG_GRAF)
 		vm->flag = vm->flag | FLAG_GRAF;
-	}
+	else if (vm->tab[i] == FLAG_AFF && (vm->flag & FLAG_AFF))
+		free_exit(vm, "Warning: aff flag double inclusion");
+	else if (vm->tab[i] == FLAG_AFF)
+		vm->flag = vm->flag | FLAG_AFF;
+	else if (vm->tab[i] == FLAG_LOG && (vm->flag & FLAG_LOG))
+		free_exit(vm, "Warning: log flag double inclusion");
+	else if (vm->tab[i] == FLAG_LOG)
+		vm->flag = vm->flag | FLAG_LOG;
+	else if (vm->tab[i] == FLAG_DUMP && (vm->flag & FLAG_DUMP))
+		free_exit(vm, "Warning: dump flag double inclusion");
+	else if (vm->tab[i] == FLAG_DUMP)
+		vm->flag = vm->flag | FLAG_DUMP;
 	else if (vm->tab[i] == FLAG_ARG && vm->tab[i - 1] == FLAG_DUMP)
 	{
-		if (vm->flag & FLAG_DUMP)
-			free_exit(vm, "Warning: dump flag double inclusion");
-		vm->flag = vm->flag | FLAG_DUMP;
 		if (extract_number(av[i], vm) == UINT_MAX)
 			free_exit(vm, "Warning: dump number is too big");
 		vm->dump = extract_number(av[i], vm);
 	}
+	else
+		check_complex_flags(i, vm);
 }
 
 /*
@@ -75,10 +111,10 @@ void		parse_flags(int ac, char **av, t_vm *vm)
 		if (vm->tab[i] == FLAG_FILE)
 		{
 			carefully_open(&(vm->player[j]), av, i, vm);
-			if (i > 1 && vm->tab[i - 2] == FLAG_NBR && \
+			if (i > 2 && vm->tab[i - 2] == FLAG_NBR && \
 					vm->tab[i - 1] == FLAG_ARG)
 			{
-				if (extract_number(av[i - 1], vm) >= MAX_PLAYERS)
+				if (extract_number(av[i - 1], vm) > (size_t)vm->tab[0])
 					free_exit(vm, "Warning: id is too big");
 				if ((vm->player[j].id = extract_number(av[i - 1], vm)) < 1)
 					free_exit(vm, "Warning: id must be bigger than 0");

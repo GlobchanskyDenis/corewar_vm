@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 18:25:51 by bsabre-c          #+#    #+#             */
-/*   Updated: 2020/01/02 14:27:43 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/03 17:45:29 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,18 +49,14 @@ void		initialize_game(unsigned char *arena, t_vm *vm)
 		error_exit(vm, "initialize game - empty ptr found");
 	step = MEM_SIZE / vm->max_pl;
 	i = -1;
-	// fprint("max_pl %d\n", (int)vm->max_pl);
 	while (++i < vm->max_pl)
 	{
-		// fprint("check1\n");
 		ft_memcpy(&(arena[i * step]), vm->player[i].code, \
 				vm->player[i].codesize);
 		counter = -1;
 		while (++counter < vm->player[i].codesize)
 			vm->arena_owner[i * step + counter] = vm->player[i].id;
-		// fprint("check2\n");
 		carriage = add_new_carriage_in_stack(vm);
-		// fprint("check3\n");
 		carriage->owner_id = vm->player[i].id;
 		carriage->position = i * step;
 		carriage->reg[0] = -vm->player[i].id;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vm_print_arena.c                                   :+:      :+:    :+:   */
+/*   vm_dump_arena.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/20 20:47:56 by bsabre-c          #+#    #+#             */
-/*   Updated: 2020/01/02 17:09:27 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/03 17:34:55 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,6 @@ static void	print_arena_hex(short nbr)
 	}
 }
 
-
-
 static void	set_color(short i, short *arena_owner, t_car *carriage)
 {
 	if (!carriage || !arena_owner)
@@ -52,7 +50,7 @@ static void	set_color(short i, short *arena_owner, t_car *carriage)
 	else if (carriage && carriage->owner_id % 5 == 3)
 		fprint("\x1b[30;2;%dm", 101);
 	else if (carriage && carriage->owner_id % 5 == 4)
-		fprint("\x1b[30;2;%dm", 106);	
+		fprint("\x1b[30;2;%dm", 106);
 	else if (arena_owner[i] % 5 == 1)
 		fprint("\x1b[%dm", 32);
 	else if (arena_owner[i] % 5 == 2)
@@ -75,7 +73,7 @@ static void	print_iterator_nbr(short i)
 	fprint(" : ");
 }
 
-void		print_arena(unsigned char *arena, t_vm *vm)
+void		dump_arena(unsigned char *arena, t_vm *vm)
 {
 	short	i;
 	short	hex1;
@@ -85,18 +83,18 @@ void		print_arena(unsigned char *arena, t_vm *vm)
 		error_exit(vm, "print arena - empty ptr found");
 	i = -1;
 	while (++i < MEM_SIZE)
-	{	
+	{
 		if (!(i % 64) && i != 0)
 			ft_putchar('\n');
 		if (!(i % 64))
 			print_iterator_nbr(i);
-		hex1 = (short)(arena[i] >> 4);		
+		hex1 = (short)(arena[i] >> 4);
 		hex2 = (short)(arena[i] & 0xF);
-		if (DUMP_COLOR)
+		if (vm->flag & FLAG_COLOR_DUMP)
 			set_color(i, vm->arena_owner, vm->car);
 		print_arena_hex(hex1);
 		print_arena_hex(hex2);
-		if (DUMP_COLOR)
+		if (vm->flag & FLAG_COLOR_DUMP)
 			ft_putstr("\x1b[0m");
 		ft_putchar(' ');
 	}

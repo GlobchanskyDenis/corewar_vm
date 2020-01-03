@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vm_parse_flags.c                                   :+:      :+:    :+:   */
+/*   vm_parse_flags_1.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bsabre-c <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/14 19:26:00 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/14 19:26:02 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/03 13:46:26 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,6 @@ static short	is_file(char *src, short *tab)
 
 static short	parse_argument(char *src, short *tab)
 {
-	if (!src || !tab)
-	{
-		if (tab)
-			free(tab);
-		error_exit(NULL, "parse argument - empty ptr found");
-	}
 	if (!ft_strcmp(src, GRAFIX))
 		return (FLAG_GRAF);
 	if (!ft_strcmp(src, DUMP))
@@ -73,6 +67,16 @@ static short	parse_argument(char *src, short *tab)
 		return (FLAG_ARG);
 	if (is_file(src, tab))
 		return (FLAG_FILE);
+	if (!ft_strcmp(src, AFF))
+		return (FLAG_AFF);
+	if (!ft_strcmp(src, LOG))
+		return (FLAG_LOG);
+	if (!ft_strcmp(src, COLOR_DUMP))
+		return (FLAG_COLOR_DUMP);
+	if (!ft_strcmp(src, INFO_DUMP))
+		return (FLAG_INFO_DUMP);
+	if (!ft_strcmp(src, FULL_DUMP))
+		return (FLAG_FULL_DUMP);
 	fprint("Warning: unknown argument '%s'\n", src);
 	free(tab);
 	exit(0);

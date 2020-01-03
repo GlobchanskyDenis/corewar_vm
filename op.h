@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   op.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmaynard <jmaynard@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:16:26 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/12/21 13:07:53 by jmaynard         ###   ########.fr       */
+/*   Updated: 2020/01/03 15:33:59 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # define REG_CODE				1
 # define DIR_CODE				2
 # define IND_CODE				3
-# define MAX_ARGS_NUMBER		4
+# define MAX_ARGS_NUMBER		12
 # define MAX_PLAYERS			4
 # define MEM_SIZE				(4*1024)
 # define IDX_MOD				(MEM_SIZE / 8)

@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 18:25:44 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/12/26 12:47:22 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/03 17:46:23 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ static void	sort_players_by_id(t_pl *player, short max_pl, t_vm *vm)
 			player[i] = tmp_player;
 			i = -1;
 		}
+		else if (player[i].id == player[i + 1].id)
+			free_exit(vm, "Warning: identical id numbers was found");
 	}
 }
 
@@ -39,7 +41,7 @@ static void	assign_id_to_players(t_pl *player, short max_pl, t_vm *vm)
 	short	id;
 
 	if (!vm)
-		error_exit(vm, "assign id to files - empty ptr found");
+		error_exit(vm, "assign id to players - empty ptr found");
 	id = 1;
 	i = -1;
 	while (++i < max_pl)
@@ -58,12 +60,29 @@ static void	assign_id_to_players(t_pl *player, short max_pl, t_vm *vm)
 	}
 }
 
+static void	check_another_flag_cases(short i, t_vm *vm)
+{
+	short	j;
+
+	if (vm->tab[i] == FLAG_LOG || vm->tab[i] == FLAG_AFF || \
+			vm->tab[i] == FLAG_DUMP || vm->tab[i] == FLAG_GRAF)
+	{
+		j = i;
+		while (--j != 0)
+		{
+			if (vm->tab[j] == FLAG_FILE)
+			{
+				ft_putstr("Warning: aff, log, dump and graf flags must be ");
+				free_exit(vm, "before filenames");
+			}
+		}
+	}
+}
+
 static void	check_invalid_flag_cases(int ac, t_vm *vm)
 {
 	short	i;
 
-	if (vm->tab[ac - 1] != FLAG_FILE)
-		free_exit(vm, "Warning: the last argument must be filename");
 	i = 0;
 	while (++i < (short)ac)
 	{
@@ -71,20 +90,16 @@ static void	check_invalid_flag_cases(int ac, t_vm *vm)
 			free_exit(vm, "Warning: dump flag without argument");
 		if (vm->tab[i] == FLAG_NBR && i + 1 < ac && vm->tab[i + 1] != FLAG_ARG)
 			free_exit(vm, "Warning: number flag without argument");
-		if (vm->tab[i] == FLAG_ARG && vm->tab[i - 1] != FLAG_DUMP && \
-				vm->tab[i - 1] != FLAG_NBR)
+		if (vm->tab[i] == FLAG_ARG && (i == 1 || \
+				(vm->tab[i - 1] != FLAG_DUMP && vm->tab[i - 1] != FLAG_NBR)))
 			free_exit(vm, "Warning: argument without flag");
 		if (vm->tab[i] == FLAG_ARG && vm->tab[i - 1] == FLAG_NBR && \
 				(i + 1 >= ac || vm->tab[i + 1] != FLAG_FILE))
 			free_exit(vm, "Warning: flag nbr and argument without file");
-		if (vm->tab[i] == FLAG_DUMP && (i > 2 || \
-				(i > 1 && vm->tab[1] != FLAG_GRAF)))
-			free_exit(vm, "Warning: dump must be in the begining");
-		if (vm->tab[i] == FLAG_GRAF && (i > 3 || \
-				(i > 1 && vm->tab[1] != FLAG_DUMP)))
-			free_exit(vm, "Warning: graf must be in the begining");
+		check_another_flag_cases(i, vm);
 	}
-	assign_id_to_players(vm->player, vm->max_pl, vm);
+	if (vm->tab[ac - 1] != FLAG_FILE)
+		free_exit(vm, "Warning: the last argument must be filename");
 }
 
 /*
@@ -97,8 +112,10 @@ void		initialize_all(int ac, char **av, t_vm *vm)
 		error_exit(vm, "initialize all - empty ptr found");
 	parse_flags(ac, av, vm);
 	check_invalid_flag_cases(ac, vm);
+	assign_id_to_players(vm->player, vm->max_pl, vm);
 	sort_players_by_id(vm->player, vm->max_pl, vm);
 	read_files(vm);
-	initialize_game(vm->arena, vm);
 	initialize_operations_array(vm);
+	g_flags = vm->flag;
+	initialize_game(vm->arena, vm);
 }

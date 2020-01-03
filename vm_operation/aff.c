@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 19:06:09 by jmaynard          #+#    #+#             */
-/*   Updated: 2020/01/01 19:58:15 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/02 21:55:09 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,18 @@
 
 void	operation_aff(t_car *carriage, t_vm *vm)
 {
+	int		types;
 	int		reg_nbr;
 	char	symbol;
 
-	if (!carriage || !vm)
-		error_exit(vm, "operation aff - empty ptr found");
-	// fprint("cycle %d\tposition %d  operation aff\t", (int)carriage->position, (int)vm->cw->cycle);
-	
-	carriage->step = 3;
-	reg_nbr = (int)vm->arena[(carriage->position + 1) % MEM_SIZE];
+	types = (int)vm->arena[(carriage->position + 1) % MEM_SIZE];
+	carriage->step = 2 + get_arg_size(types >> 6, 16);
+	if (REG_CODE << 6 != types)
+		return ;
+	reg_nbr = (int)vm->arena[(carriage->position + 2) % MEM_SIZE];
 	if (reg_nbr < 1 || reg_nbr > REG_NUMBER)
 		return ;
 	symbol = (char)carriage->reg[reg_nbr - 1];
-	//fprint("r%d char '%c'\n", reg_nbr - 1, symbol);
+	if (vm->flag & FLAG_AFF)
+		fprint("Aff: %c\n", symbol);
 }

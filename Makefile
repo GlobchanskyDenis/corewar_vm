@@ -6,7 +6,7 @@
 #    By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/13 12:16:02 by bsabre-c          #+#    #+#              #
-#    Updated: 2020/01/02 15:03:17 by bsabre-c         ###   ########.fr        #
+#    Updated: 2020/01/03 16:46:09 by bsabre-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,9 +22,9 @@ SRC			=	vm_main.c						vm_free_exit.c				\
 				vm_parse_flags_2.c				vm_extract.c				\
 				vm_carriage_1.c					vm_carriage_2.c				\
 				vm_initialize_all.c				vm_initialize_game.c		\
-				vm_temp.c						vm_getters.c				\
+				vm_dump.c						vm_getters.c				\
 				vm_check.c						vm_get_set_bytes.c		\
-				vm_war.c						vm_print_arena.c			\
+				vm_war.c						vm_dump_arena.c			\
 							vm_operation/null.c		\
 							vm_operation/live.c		\
 							vm_operation/ld.c		\
