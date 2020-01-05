@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 20:05:37 by jmaynard          #+#    #+#             */
-/*   Updated: 2020/01/03 16:57:11 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 15:53:51 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ inline static short	is_invalid_parameters(unsigned char types, short reg_num)
 {
 	if (reg_num > REG_NUMBER || reg_num < 1)
 		return (1);
-	if (((DIR_CODE << 6) | (REG_CODE << 4)) != types && ((IND_CODE << 6) | \
-			(REG_CODE << 4)) != types)
+	if (types >> 6 == REG_CODE || types >> 6 == 0 || \
+		(types >> 4 & 3) != REG_CODE)
 		return (1);
 	return (0);
 }
 
-inline static void	log_lld(short carriage_id, int arg1, short reg_num)
+inline static void	log_lld(size_t carriage_id, int arg1, short reg_num)
 {
 	if (!(g_flags & FLAG_LOG))
 		return ;

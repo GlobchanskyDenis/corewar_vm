@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 19:28:25 by jmaynard          #+#    #+#             */
-/*   Updated: 2020/01/03 16:57:30 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/04 22:39:24 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ inline static short	is_invalid_parameters(unsigned char types, short reg_num, \
 	return (0);
 }
 
-inline static void	log_st(short carriage_id, short reg_num, short arg2)
+inline static void	log_st(size_t carriage_id, short reg_num, short arg2)
 {
 	if (!(g_flags & FLAG_LOG))
 		return ;

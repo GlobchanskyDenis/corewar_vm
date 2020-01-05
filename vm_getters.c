@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 18:12:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2020/01/03 17:43:53 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 15:52:32 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ short	get_execution_length(unsigned char op_code)
 
 int		get_argument(int value, short type, t_car *carriage, t_vm *vm)
 {
+	short		op_code;
+
 	if (!vm || !vm->arena || !carriage)
 		error_exit(vm, "get argument - empty ptr found");
 	if (type == REG_CODE && value >= 1 && value <= REG_NUMBER)
@@ -74,8 +76,14 @@ int		get_argument(int value, short type, t_car *carriage, t_vm *vm)
 		return (value);
 	if (type == IND_CODE)
 	{
-		return (get_bytes(vm->arena, calc_ind_address(carriage->position, \
-				value, vm), 4, vm));
+		op_code = carriage->command;
+		if (op_code != OP_LLD && op_code != OP_LLDI)
+		{
+			return (get_bytes(vm->arena, calc_ind_address(carriage->position, \
+					value, vm), 4, vm));
+		}
+		return (get_bytes(vm->arena, calc_long_ind_address(carriage->position, \
+					value, vm), 4, vm));
 	}
 	return (0);
 }

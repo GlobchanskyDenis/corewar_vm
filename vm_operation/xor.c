@@ -6,23 +6,28 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 16:28:15 by jmaynard          #+#    #+#             */
-/*   Updated: 2020/01/03 16:57:44 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 15:57:02 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../vm.h"
 
-inline static short	is_invalid_parameters(unsigned char types, int reg)
+inline static short	is_invalid_parameters(unsigned char types, int arg1, \
+		int arg2, int reg_num)
 {
-	if ((types & 3) != 0 || (types >> 2 & 3) != REG_CODE || \
+	if ((types >> 2 & 3) != REG_CODE || \
 			(types >> 4 & 3) == 0 || (types >> 6) == 0)
 		return (1);
-	if (reg > REG_NUMBER || reg < 1)
+	if (reg_num > REG_NUMBER || reg_num < 1)
+		return (1);
+	if ((types >> 6) == REG_CODE && (arg1 > REG_NUMBER || arg1 < 1))
+		return (1);
+	if ((types >> 4 & 3) == REG_CODE && (arg2 > REG_NUMBER || arg2 < 1))
 		return (1);
 	return (0);
 }
 
-inline static void	log_xor(short carriage_id, int arg1, int arg2, \
+inline static void	log_xor(size_t carriage_id, int arg1, int arg2, \
 		short reg_num)
 {
 	if (!(g_flags & FLAG_LOG))
@@ -59,13 +64,14 @@ void				operation_xor(t_car *carriage, t_vm *vm)
 			get_arg_size(types >> 2 & 3, 6);
 	reg_num = vm->arena[(carriage->position + 2 + get_arg_size(types >> 6, 6) \
 			+ get_arg_size(types >> 4 & 3, 6)) % MEM_SIZE];
-	arg1 = get_argument(get_bytes(vm->arena, carriage->position + 2, \
-			get_arg_size(types >> 6, 6), vm), types >> 6, carriage, vm);
-	arg2 = get_argument(get_bytes(vm->arena, carriage->position + 2 + \
-			get_arg_size(types >> 6, 6), get_arg_size(types >> 4 & 3, 6), vm), \
-			types >> 4 & 3, carriage, vm);
-	if (is_invalid_parameters(types, reg_num))
+	arg1 = get_bytes(vm->arena, carriage->position + 2, \
+			get_arg_size(types >> 6, 6), vm);
+	arg2 = get_bytes(vm->arena, carriage->position + 2 + \
+			get_arg_size(types >> 6, 6), get_arg_size(types >> 4 & 3, 6), vm);
+	if (is_invalid_parameters(types, arg1, arg2, reg_num))
 		return ;
+	arg1 = get_argument(arg1, types >> 6, carriage, vm);
+	arg2 = get_argument(arg2, types >> 4 & 3, carriage, vm);
 	carriage->reg[reg_num - 1] = arg1 ^ arg2;
 	carriage->carry = (carriage->reg[reg_num - 1]) ? 0 : 1;
 	log_xor(carriage->id, arg1, arg2, reg_num);

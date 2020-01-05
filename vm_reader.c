@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm_reader.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bsabre-c <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 20:57:35 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/13 20:57:38 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 16:00:37 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,15 @@ static void	check_size_errors(int ret, char *filename, t_vm *vm)
 	}
 }
 
+/*
+**	if (nbr != (size_t)codesize)
+**	{
+**		fprint("%s codesize = %d, extracted champ size = %d\n", \
+**				player->filename, codesize, (int)nbr);
+**		error_exit(vm, "wrong data in champion size");
+**	}
+*/
+
 static void	check_champ_size(t_pl *player, char *buf, int codesize, t_vm *vm)
 {
 	short	i;
@@ -41,12 +50,6 @@ static void	check_champ_size(t_pl *player, char *buf, int codesize, t_vm *vm)
 	i = -1;
 	while (++i < CHAMP_EXEC_CODE_SIZE)
 		nbr = (nbr << 8) + (size_t)buf[i];
-	if (nbr != (size_t)codesize)
-	{
-		fprint("%s codesize = %d, extracted champ size = %d\n", \
-				player->filename, codesize, (int)nbr);
-		error_exit(vm, "wrong data in champion size");
-	}
 	player->codesize = codesize;
 }
 

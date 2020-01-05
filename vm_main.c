@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:16:17 by bsabre-c          #+#    #+#             */
-/*   Updated: 2020/01/03 17:51:15 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 18:34:42 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,22 @@ static void	print_usage(int ac)
 	exit(0);
 }
 
+static void	introduce(short max_pl, t_vm *vm)
+{
+	short	nbr;
+	t_pl	player;
+
+	nbr = 0;
+	ft_putstr("Introducing contestants...\n");
+	while (nbr < max_pl)
+	{
+		player = vm->player[nbr];
+		fprint("* Player %d, weighing %d bytes, ", nbr + 1, player.codesize);
+		fprint("\"%s\" (\"%s\") !\n", player.name, player.comment);
+		nbr++;
+	}
+}
+
 int			main(int ac, char **av)
 {
 	t_vm	*vm;
@@ -61,6 +77,7 @@ int			main(int ac, char **av)
 	if (!(vm = create_vm_struct(preliminary_parse_flags(ac, av))))
 		error_exit(vm, "main - null ptr returned");
 	initialize_all(ac, av, vm);
+	introduce(vm->max_pl, vm);
 	corewar(vm);
 	free_exit(vm, NULL);
 	return (0);

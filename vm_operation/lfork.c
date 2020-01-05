@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 19:04:08 by jmaynard          #+#    #+#             */
-/*   Updated: 2020/01/03 16:57:01 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 15:55:08 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ inline static void	log_lfork(t_car *carriage, int pos)
 	if (carriage->id < 10)
 		ft_putchar(' ');
 	fprint("%d | lfork %d (%d)\n", carriage->id, pos, \
-			carriage->position + pos % IDX_MOD);
+			carriage->position + pos);
 }
 
 /*
@@ -43,8 +43,11 @@ void				operation_lfork(t_car *carriage, t_vm *vm)
 
 	pos = get_bytes(vm->arena, (carriage->position + 1) % MEM_SIZE, 2, vm);
 	tmp = carriage_duplicate(carriage, vm);
-	tmp->position = (tmp->position + pos) % MEM_SIZE;
-	carriage_read_command(tmp, vm);
+	tmp->position = tmp->position + pos;
+	while (tmp->position < 0)
+		tmp->position += MEM_SIZE;
+	tmp->position = tmp->position % MEM_SIZE;
+	tmp->command = -1;
 	carriage->step = 3;
 	log_lfork(carriage, pos);
 }

@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:18:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2020/01/03 17:04:16 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 18:38:24 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ typedef struct	s_pl
 
 typedef struct	s_car
 {
-	short			id;
+	size_t			id;
 	short			owner_id;
 	short			carry;
 	short			step;
@@ -84,10 +84,6 @@ typedef struct	s_car
 	struct s_car	*next;
 	size_t			last_live_cycle;
 }				t_car;
-
-/*
-**	Cycles to die can be less then 0!
-*/
 
 typedef struct	s_corewar
 {
@@ -109,11 +105,20 @@ typedef struct	s_vm
 	t_car			*car;
 	void			(*operation[17])(t_car *, struct s_vm *);
 	short			max_pl;
+	size_t			max_car_id;
 	short			flag;
 	short			checks;
 	size_t			dump;
 	t_corewar		*cw;
 }				t_vm;
+
+typedef struct	s_arg
+{
+	int				arg1;
+	int				arg2;
+	int				arg3;
+	int				reg_num;
+}				t_arg;
 
 void			error_exit(t_vm *s, char *message);
 void			free_exit(t_vm *s, char *message);
@@ -143,7 +148,6 @@ void			dump_arena(unsigned char *arena, t_vm *vm);
 int				calc_ind_address(short position, int ind, t_vm *vm);
 int				calc_long_ind_address(short position, int ind, t_vm *vm);
 int				get_argument(int value, short type, t_car *carriage, t_vm *vm);
-int				check(t_vm *vm);
 void			corewar(t_vm *vm);
 
 void			operation_null(t_car *carriage, t_vm *vm);

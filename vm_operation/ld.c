@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 18:01:24 by jmaynard          #+#    #+#             */
-/*   Updated: 2020/01/03 16:56:50 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 15:54:43 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,13 @@ inline static short	is_invalid_parameters(unsigned char types, short reg_num)
 {
 	if (reg_num > REG_NUMBER || reg_num < 1)
 		return (1);
-	if (((DIR_CODE << 6) | (REG_CODE << 4)) != types && ((IND_CODE << 6) | \
-			(REG_CODE << 4)) != types)
-		return (1);
-	if (get_arg_size(types >> 6, 2) == 0)
+	if ((types >> 6 != DIR_CODE && types >> 6 != IND_CODE) || \
+			(types >> 4 & 3) != REG_CODE)
 		return (1);
 	return (0);
 }
 
-inline static void	log_ld(short carriage_id, int arg1, short reg_num)
+inline static void	log_ld(size_t carriage_id, int arg1, short reg_num)
 {
 	if (!(g_flags & FLAG_LOG))
 		return ;
@@ -69,5 +67,6 @@ void				operation_ld(t_car *carriage, t_vm *vm)
 	else if (types >> 6 == IND_CODE)
 		carriage->reg[reg_num - 1] = get_bytes(vm->arena, \
 				calc_ind_address(carriage->position, arg1, vm), 4, vm);
+	carriage->carry = (carriage->reg[reg_num - 1]) ? 0 : 1;
 	log_ld(carriage->id, carriage->reg[reg_num - 1], reg_num);
 }

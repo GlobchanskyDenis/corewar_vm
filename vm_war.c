@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 18:13:25 by bsabre-c          #+#    #+#             */
-/*   Updated: 2020/01/03 17:49:57 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 16:02:35 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,15 @@ static void			exe_carriages(t_vm *vm)
 	while (carriage)
 	{
 		carriage->cycles_to_exe--;
-		if (carriage->cycles_to_exe < 1)
-			vm->operation[carriage->command](carriage, vm);
-		carriage = carriage->next;
-	}
-	carriage = vm->car;
-	while (carriage)
-	{
+		if (carriage->command == -1)
+		{
+			carriage_read_command(carriage, vm);
+			carriage->cycles_to_exe--;
+		}
 		if (carriage->cycles_to_exe < 1)
 		{
+			vm->operation[carriage->command](carriage, vm);
 			carriage_make_step(carriage, vm);
-			carriage_read_command(carriage, vm);
 		}
 		carriage = carriage->next;
 	}
@@ -40,8 +38,6 @@ static t_corewar	initialize_variables(t_vm *vm)
 {
 	t_corewar	cw;
 
-	if (!vm)
-		error_exit(vm, "initialize variables - empty ptr found");
 	ft_bzero(&cw, sizeof(t_corewar));
 	cw.cycle = 0;
 	cw.cycles_to_die = CYCLE_TO_DIE;
@@ -50,50 +46,48 @@ static t_corewar	initialize_variables(t_vm *vm)
 	return (cw);
 }
 
-void				introduce(short max_pl, t_vm *vm)
+static void			cycles_to_die_check(t_vm *vm)
 {
-	short	nbr;
-	t_pl	player;
+	t_car *tmp;
+	t_car *carriage;
 
-	nbr = 0;
-	ft_putstr("Introducing contestants...\n");
-	while (nbr < max_pl)
+	carriage = vm->car;
+	vm->checks++;
+	while (carriage)
 	{
-		player = vm->player[nbr];
-		fprint("* Player %d, weighing %d bytes, ", nbr + 1, player.codesize);
-		fprint("\"%s\" (\"%s\") !\n", player.name, player.comment);
-		nbr++;
+		tmp = carriage->next;
+		if (carriage->last_live_cycle + vm->cw->cycles_to_die <= vm->cw->cycle)
+			find_n_del_carriage(carriage, vm);
+		carriage = tmp;
 	}
-}
-
-static void			winner_is(t_corewar cw, t_vm *vm)
-{
-	fprint("Contestant %d, \"%s\", has won !\n", cw.last_alive, \
-			vm->player[cw.last_alive - 1].name);
+	if (vm->cw->lives_for_cycle >= NBR_LIVE || vm->checks >= MAX_CHECKS)
+	{
+		vm->cw->cycles_to_die -= CYCLE_DELTA;
+		vm->checks = 0;
+		if ((g_flags & FLAG_LOG))
+			fprint("Cycle to die is now %d\n", vm->cw->cycles_to_die);
+	}
+	vm->cw->lives_for_cycle = 0;
+	vm->cw->next_check += vm->cw->cycles_to_die;
 }
 
 void				corewar(t_vm *vm)
 {
 	t_corewar	cw;
 
-	if (!vm)
-		error_exit(vm, "corewar - empty ptr found");
 	cw = initialize_variables(vm);
 	vm->cw = &cw;
-	introduce(vm->max_pl, vm);
-	while (cw.cycles_to_die > 0)
+	while (vm->car)
 	{
 		if (vm->flag & FLAG_DUMP && vm->dump <= cw.cycle)
 			dump(vm);
-		if (cw.cycle == cw.next_check)
-		{
-			check(vm);
-			cw.next_check += cw.cycles_to_die;
-		}
-		++cw.cycle;
+		cw.cycle++;
 		if (vm->flag & FLAG_LOG)
 			fprint("It is now cycle %d\n", (int)cw.cycle);
 		exe_carriages(vm);
+		if (cw.cycle == cw.next_check || cw.cycles_to_die <= 0)
+			cycles_to_die_check(vm);
 	}
-	winner_is(cw, vm);
+	fprint("Contestant %d, \"%s\", has won !\n", cw.last_alive, \
+			vm->player[cw.last_alive - 1].name);
 }

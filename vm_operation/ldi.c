@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 20:09:45 by jmaynard          #+#    #+#             */
-/*   Updated: 2020/01/03 16:56:56 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 15:54:49 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ inline static short	is_invalid_parameters(unsigned char types, int arg1, \
 {
 	if (reg_num > REG_NUMBER || reg_num < 1)
 		return (1);
-	if ((types & 3) != 0 || (types >> 2 & 3) != REG_CODE || \
+	if ((types >> 2 & 3) != REG_CODE || \
 			(types >> 4 & 3) == 0 || (types >> 4 & 3) == IND_CODE || \
 			types >> 6 == 0)
 		return (1);

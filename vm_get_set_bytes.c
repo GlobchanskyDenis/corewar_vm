@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 16:38:44 by bsabre-c          #+#    #+#             */
-/*   Updated: 2020/01/03 17:38:18 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 15:58:10 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,9 @@ int			get_bytes(unsigned char *arena, short start, short len, \
 		error_exit(vm, "get bytes - empty ptr found");
 	if (len < 0 || len > 4)
 		error_exit(vm, "get bytes - wrong len value");
-	if (start < 0 || start > MEM_SIZE)
-		error_exit(vm, "get bytes - wrong start value");
+	while (start < 0)
+		start += MEM_SIZE;
+	start = start % MEM_SIZE;
 	if (len == 4)
 		return (get_4_bytes(arena, start, vm));
 	if (len == 2)

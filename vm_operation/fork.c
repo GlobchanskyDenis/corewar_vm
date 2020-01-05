@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 18:35:13 by jmaynard          #+#    #+#             */
-/*   Updated: 2020/01/03 16:56:44 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 15:54:27 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,11 @@ void				operation_fork(t_car *carriage, t_vm *vm)
 
 	pos = get_bytes(vm->arena, (carriage->position + 1) % MEM_SIZE, 2, vm);
 	tmp = carriage_duplicate(carriage, vm);
-	tmp->position = (tmp->position + pos % IDX_MOD) % MEM_SIZE;
-	carriage_read_command(tmp, vm);
+	tmp->position = tmp->position + pos % IDX_MOD;
+	if (tmp->position < 0)
+		tmp->position = tmp->position + MEM_SIZE;
+	tmp->position = tmp->position % MEM_SIZE;
+	tmp->command = -1;
 	carriage->step = 3;
 	log_fork(carriage, pos);
 }

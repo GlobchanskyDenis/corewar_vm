@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 19:52:31 by jmaynard          #+#    #+#             */
-/*   Updated: 2020/01/03 16:56:34 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 15:54:17 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 inline static short	is_invalid_parameters(unsigned char types, int arg1, \
 		int arg2, int reg)
 {
-	if ((types & 3) != 0 || (types >> 2 & 3) != REG_CODE || \
+	if ((types >> 2 & 3) != REG_CODE || \
 			(types >> 4 & 3) == 0 || (types >> 6) == 0)
 		return (1);
 	if (reg > REG_NUMBER || reg < 1)
@@ -27,7 +27,7 @@ inline static short	is_invalid_parameters(unsigned char types, int arg1, \
 	return (0);
 }
 
-inline static void	log_and(short carriage_id, int arg1, int arg2, int reg_nbr)
+inline static void	log_and(size_t carriage_id, int arg1, int arg2, int reg_nbr)
 {
 	if (!(g_flags & FLAG_LOG))
 		return ;
@@ -69,8 +69,9 @@ void				operation_and(t_car *carriage, t_vm *vm)
 			get_arg_size(types >> 6, 6), get_arg_size(types >> 4 & 3, 6), vm);
 	if (is_invalid_parameters(types, arg1, arg2, reg_nbr))
 		return ;
-	carriage->reg[reg_nbr - 1] = get_argument(arg1, types >> 6, carriage, vm) \
-			& get_argument(arg2, types >> 4 & 3, carriage, vm);
+	arg1 = get_argument(arg1, types >> 6, carriage, vm);
+	arg2 = get_argument(arg2, types >> 4 & 3, carriage, vm);
+	carriage->reg[reg_nbr - 1] = arg1 & arg2;
 	carriage->carry = (carriage->reg[reg_nbr - 1]) ? 0 : 1;
 	log_and(carriage->id, arg1, arg2, reg_nbr);
 }

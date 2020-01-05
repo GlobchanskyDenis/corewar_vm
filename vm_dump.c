@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 00:16:51 by bsabre-c          #+#    #+#             */
-/*   Updated: 2020/01/03 18:26:50 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/03 19:33:41 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,11 @@ static void	print_carriages(t_car *car, t_vm *vm)
 		error_exit(vm, "print carriages - empty ptr found");
 	while (car)
 	{
-		fprint("======= carriage =======\ncarry\t\t%d\n", car->carry);
-		fprint("step\t\t%d\ncommand\t\t%d\n", car->step, car->command);
+		fprint("======= carriage =======\ncarry\t\t%d\t", car->carry);
+		fprint("step\t\t%d\ncommand\t\t%d\t", car->step, car->command);
 		fprint("cycles to exe\t%d\n", car->cycles_to_exe);
-		fprint("position\t%d\nid\t\t%d\n", car->position, car->id);
+		fprint("position\t%d\tid\t\t%d\n", car->position, car->id);
+		fprint("owner id\t%d\t", car->owner_id);
 		fprint("last live cycle\t%d\nREGISTERS:\n", car->last_live_cycle);
 		i = -1;
 		while (++i < REG_NUMBER)
@@ -118,17 +119,14 @@ void		dump(t_vm *vm)
 	{
 		fprint("=======================================\n\t\tFULL DUMP\n");
 		fprint("number of players\t%d\n", (int)vm->max_pl);
-		if (vm->flag & FLAG_DUMP)
-			fprint("dump cycle\t\t%d\n", (int)vm->dump);
+		fprint("dump cycle\t\t%d\n", (int)vm->dump);
 		fprint("grafix flag\t\t%s\n", (vm->flag & FLAG_GRAF) ? "ON" : "OFF");
 		fprint("nbr flag\t\t%s\n", (vm->flag & FLAG_NBR) ? "ON" : "OFF");
 		fprint("log flag\t\t%s\n", (vm->flag & FLAG_LOG) ? "ON" : "OFF");
 		fprint("aff flag\t\t%s\n", (vm->flag & FLAG_AFF) ? "ON" : "OFF");
 		fprint("dump flag\t\t%s\n", (vm->flag & FLAG_DUMP) ? "ON" : "OFF");
-		fprint("\tcolor dump\t%s\n", (vm->flag & FLAG_COLOR_DUMP) ? \
-				"ON" : "OFF");
-		fprint("\tinfo dump\t%s\n", (vm->flag & FLAG_INFO_DUMP) ? \
-				"ON" : "OFF");
+		fprint("\tcolor\t\t%s\n", (vm->flag & FLAG_COLOR_DUMP) ? "ON" : "OFF");
+		fprint("\tinfo\t\t%s\n", (vm->flag & FLAG_INFO_DUMP) ? "ON" : "OFF");
 		if (vm->player)
 			print_players(vm);
 		if (vm->car)
