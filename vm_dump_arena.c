@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/20 20:47:56 by bsabre-c          #+#    #+#             */
-/*   Updated: 2020/01/03 17:34:55 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/06 16:11:46 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,9 @@ void		dump_arena(unsigned char *arena, t_vm *vm)
 	i = -1;
 	while (++i < MEM_SIZE)
 	{
-		if (!(i % 64) && i != 0)
+		if (!(i % DUMP_OCTETS_PER_LINE) && i != 0)
 			ft_putchar('\n');
-		if (!(i % 64))
+		if (!(i % DUMP_OCTETS_PER_LINE))
 			print_iterator_nbr(i);
 		hex1 = (short)(arena[i] >> 4);
 		hex2 = (short)(arena[i] & 0xF);

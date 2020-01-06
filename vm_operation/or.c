@@ -6,14 +6,14 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 16:26:18 by jmaynard          #+#    #+#             */
-/*   Updated: 2020/01/05 15:56:32 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 20:31:25 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../vm.h"
 
-inline static short	is_invalid_parameters(unsigned char types, int arg1, \
-		int arg2, int reg)
+inline static short	is_invalid_parameters(short types, int arg1, int arg2, \
+		int reg)
 {
 	if ((types >> 2 & 3) != REG_CODE || \
 			(types >> 4 & 3) == 0 || (types >> 6) == 0)
@@ -27,10 +27,9 @@ inline static short	is_invalid_parameters(unsigned char types, int arg1, \
 	return (0);
 }
 
-inline static void	log_or(size_t carriage_id, int arg1, int arg2, \
-		short reg_num)
+inline static void	log_or(size_t carriage_id, t_arg val, short log_flag)
 {
-	if (!(g_flags & FLAG_LOG))
+	if (!log_flag)
 		return ;
 	fprint("P ");
 	if (carriage_id < 1000)
@@ -39,7 +38,7 @@ inline static void	log_or(size_t carriage_id, int arg1, int arg2, \
 		ft_putchar(' ');
 	if (carriage_id < 10)
 		ft_putchar(' ');
-	fprint("%d | or %d %d r%d\n", carriage_id, arg1, arg2, reg_num);
+	fprint("%d | or %d %d r%d\n", carriage_id, val.arg1, val.arg2, val.reg_nbr);
 }
 
 /*
@@ -54,25 +53,24 @@ inline static void	log_or(size_t carriage_id, int arg1, int arg2, \
 void				operation_or(t_car *carriage, t_vm *vm)
 {
 	int		types;
-	int		arg1;
-	int		arg2;
-	int		reg_num;
+	t_arg	val;
 
 	types = vm->arena[(carriage->position + 1) % MEM_SIZE];
 	carriage->step = 2 + get_arg_size(types >> 6, 6) + \
 			get_arg_size(types >> 4 & 3, 6) + \
 			get_arg_size(types >> 2 & 3, 6);
-	reg_num = vm->arena[(carriage->position + 2 + get_arg_size(types >> 6, 6) \
-			+ get_arg_size(types >> 4 & 3, 6)) % MEM_SIZE];
-	arg1 = get_bytes(vm->arena, carriage->position + 2, \
+	val.reg_nbr = vm->arena[(carriage->position + 2 + \
+			get_arg_size(types >> 6, 6) + get_arg_size(types >> 4 & 3, 6)) \
+			% MEM_SIZE];
+	val.arg1 = get_bytes(vm->arena, carriage->position + 2, \
 			get_arg_size(types >> 6, 6), vm);
-	arg2 = get_bytes(vm->arena, carriage->position + 2 + \
+	val.arg2 = get_bytes(vm->arena, carriage->position + 2 + \
 			get_arg_size(types >> 6, 6), get_arg_size(types >> 4 & 3, 6), vm);
-	if (is_invalid_parameters(types, arg1, arg2, reg_num))
+	if (is_invalid_parameters(types, val.arg1, val.arg2, val.reg_nbr))
 		return ;
-	arg1 = get_argument(arg1, types >> 6, carriage, vm);
-	arg2 = get_argument(arg2, types >> 4 & 3, carriage, vm);
-	carriage->reg[reg_num - 1] = arg1 | arg2;
-	carriage->carry = (carriage->reg[reg_num - 1]) ? 0 : 1;
-	log_or(carriage->id, arg1, arg2, reg_num);
+	val.arg1 = get_argument(val.arg1, types >> 6, carriage, vm);
+	val.arg2 = get_argument(val.arg2, types >> 4 & 3, carriage, vm);
+	carriage->reg[val.reg_nbr - 1] = val.arg1 | val.arg2;
+	carriage->carry = (carriage->reg[val.reg_nbr - 1]) ? 0 : 1;
+	log_or(carriage->id, val, vm->flag & FLAG_LOG);
 }

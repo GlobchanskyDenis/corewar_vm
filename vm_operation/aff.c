@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 19:06:09 by jmaynard          #+#    #+#             */
-/*   Updated: 2020/01/02 21:55:09 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 19:10:59 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,15 @@
 
 void	operation_aff(t_car *carriage, t_vm *vm)
 {
-	int		types;
-	int		reg_nbr;
+	short	types;
+	short	reg_nbr;
 	char	symbol;
 
-	types = (int)vm->arena[(carriage->position + 1) % MEM_SIZE];
+	types = (short)vm->arena[(carriage->position + 1) % MEM_SIZE];
 	carriage->step = 2 + get_arg_size(types >> 6, 16);
-	if (REG_CODE << 6 != types)
+	if (types >> 6 != REG_CODE)
 		return ;
-	reg_nbr = (int)vm->arena[(carriage->position + 2) % MEM_SIZE];
+	reg_nbr = (short)vm->arena[(carriage->position + 2) % MEM_SIZE];
 	if (reg_nbr < 1 || reg_nbr > REG_NUMBER)
 		return ;
 	symbol = (char)carriage->reg[reg_nbr - 1];

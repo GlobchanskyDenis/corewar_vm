@@ -6,15 +6,15 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 18:35:13 by jmaynard          #+#    #+#             */
-/*   Updated: 2020/01/05 15:54:27 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 19:30:49 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../vm.h"
 
-inline static void	log_fork(t_car *carriage, int pos)
+inline static void	log_fork(t_car *carriage, int pos, short log_flag)
 {
-	if (!(g_flags & FLAG_LOG))
+	if (!log_flag)
 		return ;
 	fprint("P ");
 	if (carriage->id < 1000)
@@ -48,5 +48,5 @@ void				operation_fork(t_car *carriage, t_vm *vm)
 	tmp->position = tmp->position % MEM_SIZE;
 	tmp->command = -1;
 	carriage->step = 3;
-	log_fork(carriage, pos);
+	log_fork(carriage, pos, vm->flag & FLAG_LOG);
 }

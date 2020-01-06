@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 20:57:35 by bsabre-c          #+#    #+#             */
-/*   Updated: 2020/01/05 16:00:37 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/06 17:35:01 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	check_size_errors(int ret, char *filename, t_vm *vm)
 		fprint("Error: file '%s' has too small size\n", filename);
 		error_exit(vm, NULL);
 	}
-	if (ret > 12 + PROG_NAME_LENGTH + CHAMP_EXEC_CODE_SIZE + COMMENT_LENGTH +\
+	if (ret > 12 + PROG_NAME_LENGTH + CHAMP_EXEC_CODE_SIZE + COMMENT_LENGTH + \
 			CHAMP_MAX_SIZE)
 	{
 		fprint("Error: file '%s' has too large ", filename);
@@ -30,38 +30,37 @@ static void	check_size_errors(int ret, char *filename, t_vm *vm)
 	}
 }
 
-/*
-**	if (nbr != (size_t)codesize)
-**	{
-**		fprint("%s codesize = %d, extracted champ size = %d\n", \
-**				player->filename, codesize, (int)nbr);
-**		error_exit(vm, "wrong data in champion size");
-**	}
-*/
-
-static void	check_champ_size(t_pl *player, char *buf, int codesize, t_vm *vm)
+static void	check_champ_size(t_pl *player, unsigned char *buf, \
+		short codesize, t_vm *vm)
 {
-	short	i;
-	size_t	nbr;
+	short			i;
+	size_t			nbr;
 
 	if (!player || !player->filename || !buf || !vm)
 		error_exit(vm, "check champ size - empty ptr found");
 	nbr = 0;
 	i = -1;
 	while (++i < CHAMP_EXEC_CODE_SIZE)
-		nbr = (nbr << 8) + (size_t)buf[i];
+		nbr = ((nbr << 8) + (size_t)buf[i]);
+	if (nbr != (size_t)codesize)
+	{
+		fprint("%s codesize = %d, extracted champ size = %d\n", \
+				player->filename, codesize, (int)nbr);
+		error_exit(vm, "wrong data in champion size");
+	}
 	player->codesize = codesize;
 }
 
-static void	check_header_errors(int ret, t_pl *player, char *buf, t_vm *vm)
+static void	check_header_errors(int ret, t_pl *player, unsigned char *buf, \
+		t_vm *vm)
 {
-	char	*null0;
-	char	*null1;
+	unsigned char	*null0;
+	unsigned char	*null1;
 
 	if (!vm || !player || !player->filename || !buf)
 		error_exit(vm, "check header errors - empty ptr found");
-	if (buf[0] != 0 || buf[1] != (char)0xEA || \
-			buf[2] != (char)0x83 || buf[3] != (char)0xF3)
+	if (buf[0] != (unsigned char)0 || buf[1] != (unsigned char)0xEA || \
+			buf[2] != (unsigned char)0x83 || buf[3] != (unsigned char)0xF3)
 	{
 		fprint("check header errors - file '%s' isn't binary!", \
 				player->filename);
@@ -83,9 +82,9 @@ static void	check_header_errors(int ret, t_pl *player, char *buf, t_vm *vm)
 
 void		read_files(t_vm *vm)
 {
-	short	i;
-	char	buf[MAX_BUF];
-	int		ret;
+	short			i;
+	unsigned char	buf[MAX_BUF];
+	int				ret;
 
 	if (!vm)
 		error_exit(vm, "reader - empty ptr found");
@@ -95,6 +94,6 @@ void		read_files(t_vm *vm)
 		ret = read(vm->player[i].fd, buf, MAX_BUF);
 		check_size_errors(ret, vm->player[i].filename, vm);
 		check_header_errors(ret, &(vm->player[i]), buf, vm);
-		extract_data(&(vm->player[i]), buf, vm);
+		extract_data(&(vm->player[i]), (char *)buf, vm);
 	}
 }

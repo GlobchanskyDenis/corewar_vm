@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 12:18:03 by bsabre-c          #+#    #+#             */
-/*   Updated: 2020/01/05 18:38:24 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/06 17:32:37 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,11 @@
 # define VM_H
 # include "libft/libft.h"
 # include "op.h"
+
+/*
+**	CONSTANTS
+*/
+
 # define MAX_BUF	PROG_NAME_LENGTH + CHAMP_MAX_SIZE + COMMENT_LENGTH + 1200
 # define CHAMP_EXEC_CODE_SIZE	4
 # define FLAG_GRAF				(1 << 0)
@@ -37,6 +42,7 @@
 # define LOG					"-v"
 # define COMMAND_AMOUNT			17
 # define UINT_MAX				4294967295
+# define DUMP_OCTETS_PER_LINE	64
 
 /*
 **	OPERATION CODES
@@ -67,7 +73,7 @@ typedef struct	s_pl
 	char			*filename;
 	char			*name;
 	char			*comment;
-	char			*code;
+	unsigned char	*code;
 	size_t			last_live_cycle;
 }				t_pl;
 
@@ -117,7 +123,7 @@ typedef struct	s_arg
 	int				arg1;
 	int				arg2;
 	int				arg3;
-	int				reg_num;
+	int				reg_nbr;
 }				t_arg;
 
 void			error_exit(t_vm *s, char *message);
@@ -167,7 +173,5 @@ void			operation_lld(t_car *carriage, t_vm *vm);
 void			operation_lldi(t_car *carriage, t_vm *vm);
 void			operation_lfork(t_car *carriage, t_vm *vm);
 void			operation_aff(t_car *carriage, t_vm *vm);
-
-short			g_flags;
 
 #endif

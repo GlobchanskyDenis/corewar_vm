@@ -6,14 +6,14 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 19:51:44 by jmaynard          #+#    #+#             */
-/*   Updated: 2020/01/05 15:56:49 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 20:52:07 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../vm.h"
 
-inline static short	is_invalid_parameters(unsigned char types, int reg1, \
-		int reg2, int reg3)
+inline static short	is_invalid_parameters(short types, int reg1, int reg2, \
+		int reg3)
 {
 	if (types >> 6 != REG_CODE || (types >> 4 & 3) != REG_CODE || \
 			(types >> 2 & 3) != REG_CODE)
@@ -24,9 +24,9 @@ inline static short	is_invalid_parameters(unsigned char types, int reg1, \
 	return (0);
 }
 
-inline static void	log_sub(size_t carriage_id, int reg1, int reg2, int reg3)
+inline static void	log_sub(size_t carriage_id, t_arg val, short log_flag)
 {
-	if (!(g_flags & FLAG_LOG))
+	if (!log_flag)
 		return ;
 	fprint("P ");
 	if (carriage_id < 1000)
@@ -35,7 +35,7 @@ inline static void	log_sub(size_t carriage_id, int reg1, int reg2, int reg3)
 		ft_putchar(' ');
 	if (carriage_id < 10)
 		ft_putchar(' ');
-	fprint("%d | sub r%d r%d r%d\n", carriage_id, reg1, reg2, reg3);
+	fprint("%d | sub r%d r%d r%d\n", carriage_id, val.arg1, val.arg2, val.arg3);
 }
 
 /*
@@ -49,22 +49,20 @@ inline static void	log_sub(size_t carriage_id, int reg1, int reg2, int reg3)
 
 void				operation_sub(t_car *carriage, t_vm *vm)
 {
-	int		types;
-	int		reg1;
-	int		reg2;
-	int		reg3;
+	short	types;
+	t_arg	val;
 
-	types = vm->arena[(carriage->position + 1) % MEM_SIZE];
+	types = (short)vm->arena[(carriage->position + 1) % MEM_SIZE];
 	carriage->step = 2 + get_arg_size(types >> 6, 5) + \
 			get_arg_size(types >> 4 & 3, 5) + \
 			get_arg_size(types >> 2 & 3, 5);
-	reg1 = (int)vm->arena[(carriage->position + 2) % MEM_SIZE];
-	reg2 = (int)vm->arena[(carriage->position + 3) % MEM_SIZE];
-	reg3 = (int)vm->arena[(carriage->position + 4) % MEM_SIZE];
-	if (is_invalid_parameters(types, reg1, reg2, reg3))
+	val.arg1 = (int)vm->arena[(carriage->position + 2) % MEM_SIZE];
+	val.arg2 = (int)vm->arena[(carriage->position + 3) % MEM_SIZE];
+	val.arg3 = (int)vm->arena[(carriage->position + 4) % MEM_SIZE];
+	if (is_invalid_parameters(types, val.arg1, val.arg2, val.arg3))
 		return ;
-	carriage->reg[reg3 - 1] = carriage->reg[reg1 - 1] - \
-			carriage->reg[reg2 - 1];
-	carriage->carry = (carriage->reg[reg3 - 1]) ? 0 : 1;
-	log_sub(carriage->id, reg1, reg2, reg3);
+	carriage->reg[val.arg3 - 1] = carriage->reg[val.arg1 - 1] - \
+			carriage->reg[val.arg2 - 1];
+	carriage->carry = (carriage->reg[val.arg3 - 1]) ? 0 : 1;
+	log_sub(carriage->id, val, vm->flag & FLAG_LOG);
 }

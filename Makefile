@@ -6,12 +6,12 @@
 #    By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/13 12:16:02 by bsabre-c          #+#    #+#              #
-#    Updated: 2020/01/04 17:15:29 by bsabre-c         ###   ########.fr        #
+#    Updated: 2020/01/05 18:51:53 by bsabre-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= corewar
-FLAGS		= -Wall -Wextra -Werror # -g
+FLAGS		= -Wall -Wextra -Werror  -g
 
 # directories
 DIR_O		=	objects

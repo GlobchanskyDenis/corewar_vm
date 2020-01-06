@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 18:13:25 by bsabre-c          #+#    #+#             */
-/*   Updated: 2020/01/05 16:02:35 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 21:06:22 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void			cycles_to_die_check(t_vm *vm)
 	{
 		vm->cw->cycles_to_die -= CYCLE_DELTA;
 		vm->checks = 0;
-		if ((g_flags & FLAG_LOG))
+		if (vm->flag & FLAG_LOG)
 			fprint("Cycle to die is now %d\n", vm->cw->cycles_to_die);
 	}
 	vm->cw->lives_for_cycle = 0;

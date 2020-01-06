@@ -6,7 +6,7 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 18:25:44 by bsabre-c          #+#    #+#             */
-/*   Updated: 2020/01/03 17:46:23 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 21:09:42 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,5 @@ void		initialize_all(int ac, char **av, t_vm *vm)
 	sort_players_by_id(vm->player, vm->max_pl, vm);
 	read_files(vm);
 	initialize_operations_array(vm);
-	g_flags = vm->flag;
 	initialize_game(vm->arena, vm);
 }

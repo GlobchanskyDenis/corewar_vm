@@ -6,15 +6,15 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/23 20:02:30 by jmaynard          #+#    #+#             */
-/*   Updated: 2020/01/03 16:57:49 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 21:02:33 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../vm.h"
 
-inline static void	log_zjmp(t_car *carriage, int arg1)
+inline static void	log_zjmp(t_car *carriage, int arg1, short log_flag)
 {
-	if (!(g_flags & FLAG_LOG))
+	if (!log_flag)
 		return ;
 	fprint("P ");
 	if (carriage->id < 1000)
@@ -46,5 +46,5 @@ void				operation_zjmp(t_car *carriage, t_vm *vm)
 		carriage->step = arg1 % IDX_MOD;
 	else
 		carriage->step = 3;
-	log_zjmp(carriage, arg1);
+	log_zjmp(carriage, arg1, vm->flag & FLAG_LOG);
 }

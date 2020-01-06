@@ -6,14 +6,14 @@
 /*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 16:39:05 by jmaynard          #+#    #+#             */
-/*   Updated: 2020/01/05 15:53:39 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/05 21:15:30 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../vm.h"
 
-inline static short	is_invalid_parameters(unsigned char types, int arg1, \
-		int arg2, int reg_num)
+inline static short	is_invalid_parameters(short types, int arg1, int arg2, \
+		int reg_num)
 {
 	if (reg_num > REG_NUMBER || reg_num < 1)
 		return (1);
@@ -28,9 +28,9 @@ inline static short	is_invalid_parameters(unsigned char types, int arg1, \
 	return (0);
 }
 
-inline static void	log_lldi(t_car *carriage, int arg1, int arg2, short reg_num)
+inline static void	log_lldi(t_car *carriage, t_arg val, short log_flag)
 {
-	if (!(g_flags & FLAG_LOG))
+	if (!log_flag)
 		return ;
 	fprint("P ");
 	if (carriage->id < 1000)
@@ -39,9 +39,11 @@ inline static void	log_lldi(t_car *carriage, int arg1, int arg2, short reg_num)
 		ft_putchar(' ');
 	if (carriage->id < 10)
 		ft_putchar(' ');
-	fprint("%d | lldi %d %d r%d\n", carriage->id, arg1, arg2, reg_num);
-	fprint("       | -> load from %d + %d = %d (with pc %d)\n", arg1, arg2, \
-			arg1 + arg2, carriage->position + (arg1 + arg2));
+	fprint("%d | lldi %d %d r%d\n", carriage->id, val.arg1, val.arg2, \
+			val.reg_nbr);
+	fprint("       | -> load from %d + %d = %d (with pc %d)\n", val.arg1, \
+			val.arg2, val.arg1 + val.arg2, \
+			carriage->position + (val.arg1 + val.arg2));
 }
 
 /*
@@ -56,29 +58,28 @@ inline static void	log_lldi(t_car *carriage, int arg1, int arg2, short reg_num)
 
 void				operation_lldi(t_car *carriage, t_vm *vm)
 {
-	unsigned char	types;
-	short			reg_num;
-	int				arg1;
-	int				arg2;
-	int				ind;
+	short	types;
+	int		ind;
+	t_arg	val;
 
-	types = vm->arena[(carriage->position + 1) % MEM_SIZE];
+	types = (short)vm->arena[(carriage->position + 1) % MEM_SIZE];
 	carriage->step = 2 + get_arg_size(types >> 6, 10) + \
 			get_arg_size(types >> 4 & 3, 10) + get_arg_size(types >> 2 & 3, 10);
-	reg_num = vm->arena[(carriage->position + 2 + get_arg_size(types >> 6, 10) \
-			+ get_arg_size(types >> 4 & 3, 10)) % MEM_SIZE];
-	arg1 = get_bytes(vm->arena, (carriage->position + 2) % MEM_SIZE, \
+	val.reg_nbr = vm->arena[(carriage->position + 2 + \
+			get_arg_size(types >> 6, 10) + get_arg_size(types >> 4 & 3, 10)) \
+			% MEM_SIZE];
+	val.arg1 = get_bytes(vm->arena, (carriage->position + 2) % MEM_SIZE, \
 			get_arg_size(types >> 6, 10), vm);
-	arg2 = get_bytes(vm->arena, (carriage->position + 2 + \
+	val.arg2 = get_bytes(vm->arena, (carriage->position + 2 + \
 		get_arg_size(types >> 6, 10)) % MEM_SIZE, \
 		get_arg_size(types >> 4 & 3, 10), vm);
-	if (is_invalid_parameters(types, arg1, arg2, reg_num))
+	if (is_invalid_parameters(types, val.arg1, val.arg2, val.reg_nbr))
 		return ;
-	arg1 = get_argument(arg1, types >> 6, carriage, vm);
-	arg2 = get_argument(arg2, types >> 4 & 3, carriage, vm);
-	ind = arg1 + arg2;
-	carriage->reg[reg_num - 1] = get_bytes(vm->arena, \
+	val.arg1 = get_argument(val.arg1, types >> 6, carriage, vm);
+	val.arg2 = get_argument(val.arg2, types >> 4 & 3, carriage, vm);
+	ind = val.arg1 + val.arg2;
+	carriage->reg[val.reg_nbr - 1] = get_bytes(vm->arena, \
 				calc_long_ind_address(carriage->position, ind, vm), 4, vm);
-	carriage->carry = (carriage->reg[reg_num - 1]) ? 0 : 1;
-	log_lldi(carriage, arg1, arg2, reg_num);
+	carriage->carry = (carriage->reg[val.reg_nbr - 1]) ? 0 : 1;
+	log_lldi(carriage, val, vm->flag & FLAG_LOG);
 }

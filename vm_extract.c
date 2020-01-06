@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm_extract.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bsabre-c <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: bsabre-c <bsabre-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/14 19:32:46 by bsabre-c          #+#    #+#             */
-/*   Updated: 2019/11/14 19:32:48 by bsabre-c         ###   ########.fr       */
+/*   Updated: 2020/01/06 17:35:31 by bsabre-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ void			extract_data(t_pl *player, char *buf, t_vm *vm)
 	if (!(player->comment = allocate_this(&(buf[8 + PROG_NAME_LENGTH + \
 			CHAMP_EXEC_CODE_SIZE]), COMMENT_LENGTH, vm)))
 		error_exit(vm, "extract data - allocating function returned null");
-	if (!(player->code = allocate_this(&(buf[12 + PROG_NAME_LENGTH + \
-			CHAMP_EXEC_CODE_SIZE + COMMENT_LENGTH]), player->codesize, vm)))
+	if (!(player->code = (unsigned char *)allocate_this(&(buf[12 + \
+			PROG_NAME_LENGTH + CHAMP_EXEC_CODE_SIZE + COMMENT_LENGTH]), \
+			player->codesize, vm)))
 		error_exit(vm, "extract data - allocating function returned null");
 }
